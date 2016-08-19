@@ -22,8 +22,5 @@
     "mocha": "*",
     "should": "*",
     "sinon": "*"
-  },
-  "scripts": {
-    "test": "node_modules/mocha/bin/_mocha -- --recursive"
   }
 }
