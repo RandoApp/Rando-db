@@ -16,11 +16,19 @@
     "mongodb": "2.2.x",
     "mongoose": "4.5.x",
     "winston": "2.2.0",
-    "async": "2.0.0-rc.6"
+    "async": "2.0.0-rc.6",
+    "js-yaml": "3.6.1",
+    "config": "1.21.0"
   },
   "devDependencies": {
-    "mocha": "*",
-    "should": "*",
-    "sinon": "*"
+    "mocha": "2.5.3",
+    "should": "9.0.2",
+    "sinon": "1.17.4",
+    "istanbul": "0.4.4",
+    "coveralls": "2.11.9"
+  },
+  "scripts": {
+    "test": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- --recursive",
+    "coveralls": "node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --report lcovonly -- --recursive && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   }
 }
