@@ -72,8 +72,9 @@ describe("User.", function() {
                     db.user.getAll(function(err, users) {
                         should.not.exist(err);
                         users.should.have.length(1);
-                        users[0].email.should.be.eql("email@gm.com");
-                        users[0].authToken.should.be.eql("authTokenValue");
+                        var user = users[0];
+                        user.email.should.be.eql("email@gm.com");
+                        user.authToken.should.be.eql("authTokenValue");
                         done();
                     });
                 });
