@@ -3,7 +3,7 @@ var sinon = require("sinon");
 var config = require("config");
 var db = require("../lib/randoDB");
 
-chai.use(require('chai-datetime'));
+chai.use(require("chai-datetime"));
 
 var should = chai.should();
 
@@ -22,9 +22,9 @@ describe("User.", function() {
         db.user.removeAll(done);
     });
 
-    describe('create', function() {
+    describe("create", function() {
         it("Should create user and lower case email", function(done) {
-            db.user.create({ 'email': 'EMAIL@gm.com', "authToken" : "authTokenValue" }, function() {
+            db.user.create({ "email": "EMAIL@gm.com", "authToken" : "authTokenValue" }, function() {
                 db.user.getAll(function(err, users) {
                     should.not.exist(err);
                     users.should.have.length(1);
@@ -37,12 +37,12 @@ describe("User.", function() {
         });
 
         it("Should fail create when user email is already taken", function(done) {
-            db.user.create({ 'email': 'email@gm.com' }, function() {
+            db.user.create({ "email": "email@gm.com }, function() {
                 db.user.getAll(function(err, users) {
                     should.not.exist(err);
                     users.should.have.length(1);
                     users[0].email.should.be.eql("email@gm.com");
-                    db.user.create({ 'email': 'email@gm.com' }, function(err) {
+                    db.user.create({ "email": "email@gm.com" }, function(err) {
                         should.exist(err);
                         db.user.getAll(function(err, users) {
                             should.not.exist(err);
@@ -56,10 +56,10 @@ describe("User.", function() {
         });
     });
 
-    describe('update', function() {
+    describe("update", function() {
 
         beforeEach(function(done) {
-            db.user.create({ 'email': 'email@gm.com' }, done);
+            db.user.create({ "email": "email@gm.com" }, done);
         });
 
         it("Should update user", function(done) {
@@ -81,12 +81,12 @@ describe("User.", function() {
         });
 
         it("Should fail create when user email is already taken", function(done) {
-            db.user.create({ 'email': 'email@gm.com' }, function() {
+            db.user.create({ "email": "email@gm.com" }, function() {
                 db.user.getAll(function(err, users) {
                     should.not.exist(err);
                     users.should.have.length(1);
                     users[0].email.should.be.eql("email@gm.com");
-                    db.user.create({ 'email': 'email@gm.com' }, function(err) {
+                    db.user.create({ "email": "email@gm.com" }, function(err) {
                         should.exist(err);
                         db.user.getAll(function(err, users) {
                             should.not.exist(err);
