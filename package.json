@@ -22,7 +22,8 @@
   },
   "devDependencies": {
     "mocha": "2.5.3",
-    "should": "9.0.2",
+    "chai": "3.5.0",
+    "chai-datetime": "1.4.1",
     "sinon": "1.17.4",
     "istanbul": "0.4.4",
     "coveralls": "2.11.9"
