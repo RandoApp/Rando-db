@@ -1,11 +1,7 @@
-var chai = require("chai");
 var sinon = require("sinon");
 var config = require("config");
 var db = require("../lib/randoDB");
-
-chai.use(require("chai-subset"));
-
-var should = chai.should();
+var should = require("should")
 
 describe("User.", function() {
   before(function(done) {
@@ -206,7 +202,7 @@ describe("User.", function() {
           user.email.should.be.eql("email@gm.com");
           user.firebaseInstanceIds.should.exist;
           user.firebaseInstanceIds.should.have.length(2);
-          user.firebaseInstanceIds.should.containSubset(newFirebaseInstanceIds);
+          user.firebaseInstanceIds.should.containDeep(newFirebaseInstanceIds);
           done();
         });
       });
