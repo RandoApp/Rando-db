@@ -288,15 +288,15 @@ describe("updateActiveForAllFirabaseIdsByEmail", function() {
     });
   });
 
-    it("Should do nothing and call callback when user doesn't have any FirabaseIds", function(done) {
-        db.user.create({ email: "email2@gm.com",authToken : "authTokenValue2",ip:"127.0.0.0",ban : 0}, function(err) {
-          should.not.exist(err);
+    it("Should not fail and call callback when user doesn't have any FirabaseIds", function(done) {
+        db.user.create({ email: "email2@gm.com"}, function(err) {
           db.user.updateActiveForAllFirabaseIdsByEmail("email2@gm.com", 1, function(err) {
             should.not.exist(err);
             db.user.getByEmail("email2@gm.com", function(err, user) {
               should.not.exist(err);
               should.exist(user);
-              should.not.exist(user.firebaseInstanceIds);
+              should.exist(user.firebaseInstanceIds);
+              user.firebaseInstanceIds.should.have.length(0);
               done();
           });
         });
