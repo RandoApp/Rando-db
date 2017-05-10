@@ -246,16 +246,9 @@ describe("db.user.", function() {
     });
 
     it("Should update Active to false For All FirabaseIds By Email", function(done) {
-
-            db.user.getByEmail("email@gm.com", function (e, u) {
-        console.log("1:" + u);
-      });
-
       db.user.updateActiveForAllFirabaseIdsByEmail("email@gm.com", 0, function(err) {
-        console.log(err);
         should.not.exist(err);
         db.user.getByEmail("email@gm.com", function(err, user) {
-          console.log("2:"+ user);
           should.not.exist(err);
           should.exist(user);
           user.firebaseInstanceIds.should.exist;
