@@ -1,7 +1,7 @@
 var sinon = require("sinon");
 var config = require("config");
 var db = require("../lib/randoDB");
-var should = require("should")
+var should = require("should");
 
 describe("db.user.", function() {
   before(function(done) {
@@ -187,8 +187,8 @@ describe("db.user.", function() {
       var newFirebaseInstanceIds = [{
         instanceId: "instanceId1",
         active: 1,
-        createdDate: createdDate,
-        lastUsedDate: lastUsedDate
+        createdDate,
+        lastUsedDate
       }, {
         instanceId: "instanceId2",
         active: 0,
@@ -229,8 +229,8 @@ describe("db.user.", function() {
       var firebaseInstanceIds = [{
         instanceId: "instanceId1",
         active: 1,
-        createdDate: createdDate,
-        lastUsedDate: lastUsedDate
+        createdDate,
+        lastUsedDate
       }, {
         instanceId: "instanceId2",
         active: 0,
@@ -242,7 +242,7 @@ describe("db.user.", function() {
         createdDate: createdDate + 20,
         lastUsedDate: lastUsedDate + 20
       }];
-      db.user.create({ "email": "email@gm.com", firebaseInstanceIds: firebaseInstanceIds }, done);
+      db.user.create({ "email": "email@gm.com", firebaseInstanceIds}, done);
     });
 
     it("Should update Active to false For All FirabaseIds By Email", function(done) {
