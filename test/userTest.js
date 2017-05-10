@@ -276,6 +276,32 @@ describe("updateActiveForAllFirabaseIdsByEmail", function() {
       });
     });
   });
+
+    it("Should not fail when no such user By Email", function(done) {
+      db.user.updateActiveForAllFirabaseIdsByEmail("notExist@gm.com", 1, function(err) {
+        should.not.exist(err);
+        db.user.getByEmail("notExist@gm.com", function(err, user) {
+          should.not.exist(err);
+          should.not.exist(user);
+          done();
+      });
+    });
+  });
+
+    it("Should do nothing and call callback when user doesn't have any FirabaseIds", function(done) {
+        db.user.create({ email: "email2@gm.com",authToken : "authTokenValue2",ip:"127.0.0.0",ban : 0}, function(err) {
+          should.not.exist(err);
+          db.user.updateActiveForAllFirabaseIdsByEmail("email2@gm.com", 1, function(err) {
+            should.not.exist(err);
+            db.user.getByEmail("email2@gm.com", function(err, user) {
+              should.not.exist(err);
+              should.exist(user);
+              should.not.exist(user.firebaseInstanceIds);
+              done();
+          });
+        });
+      });
+    });
 });
 
 describe("getLightUserByToken", function() {
