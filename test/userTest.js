@@ -7,7 +7,7 @@ chai.use(require("chai-subset"));
 
 var should = chai.should();
 
-describe("User.", function() {
+describe("db.user.", function() {
   before(function(done) {
     db.connect(config.test.db.url, function() {
       done();
@@ -22,7 +22,7 @@ describe("User.", function() {
     db.user.removeAll(done);
   });
 
-  describe("create", function() {
+  describe("create.", function() {
     it("Should create user and lower case email", function(done) {
       db.user.create({ "email": "EMAIL@gm.com", "authToken": "authTokenValue" }, function() {
         db.user.getAll(function(err, users) {
@@ -56,7 +56,7 @@ describe("User.", function() {
     });
   });
 
-  describe("update", function() {
+  describe("update.", function() {
     beforeEach(function(done) {
       db.user.create({ "email": "email@gm.com" }, done);
     });
@@ -80,7 +80,7 @@ describe("User.", function() {
     });
   });
 
-  describe("updateUserMetaByEmail", function() {
+  describe("updateUserMetaByEmail.", function() {
     beforeEach(function(done) {
       db.user.create({ "email": "email@gm.com" }, done);
     });
@@ -225,9 +225,9 @@ describe("User.", function() {
     });
   });
 
-  describe("updateActiveForAllFirabaseIdsByEmail", function() {
+  describe("updateActiveForAllFirabaseIdsByEmail.", function() {
     beforeEach(function(done) {
-      var createdDate = new Date().getTime();
+      var createdDate = Date.now();
       var lastUsedDate = createdDate + 10;
 
       var firebaseInstanceIds = [{
@@ -240,37 +240,51 @@ describe("User.", function() {
         active: 0,
         createdDate: createdDate + 10,
         lastUsedDate: lastUsedDate + 10
+      }, {
+        instanceId: "instanceId3",
+        active: 2,
+        createdDate: createdDate + 20,
+        lastUsedDate: lastUsedDate + 20
       }];
       db.user.create({ "email": "email@gm.com", firebaseInstanceIds: firebaseInstanceIds }, done);
     });
 
-    it("Should update Active to false For All FirabaseIds By Email ", function(done) {
+    it("Should update Active to false For All FirabaseIds By Email", function(done) {
+
+            db.user.getByEmail("email@gm.com", function (e, u) {
+        console.log("1:" + u);
+      });
+
       db.user.updateActiveForAllFirabaseIdsByEmail("email@gm.com", 0, function(err) {
         console.log(err);
         should.not.exist(err);
         db.user.getByEmail("email@gm.com", function(err, user) {
+          console.log("2:"+ user);
           should.not.exist(err);
           should.exist(user);
           user.firebaseInstanceIds.should.exist;
-          user.firebaseInstanceIds.should.have.length(2);
+          user.firebaseInstanceIds.should.have.length(3);
           user.firebaseInstanceIds[0].active.should.be.eql(0);
           user.firebaseInstanceIds[1].active.should.be.eql(0);
+          user.firebaseInstanceIds[2].active.should.be.eql(0);
           done();
         });
       });
     });
 
-    it("Should update Active to true For All FirabaseIds By Email ", function(done) {
-      db.user.updateActiveForAllFirabaseIdsByEmail("email@gm.com", true, function(err) {
+    it("Should update Active to true For All FirabaseIds By Email", function(done) {
+
+
+      db.user.updateActiveForAllFirabaseIdsByEmail("email@gm.com", 1, function(err) {
         should.not.exist(err);
         db.user.getByEmail("email@gm.com", function(err, user) {
-
           should.not.exist(err);
           should.exist(user);
           user.firebaseInstanceIds.should.exist;
-          user.firebaseInstanceIds.should.have.length(2);
+          user.firebaseInstanceIds.should.have.length(3);
           user.firebaseInstanceIds[0].active.should.be.eql(1);
           user.firebaseInstanceIds[1].active.should.be.eql(1);
+          user.firebaseInstanceIds[2].active.should.be.eql(1);
           done();
         });
       });
