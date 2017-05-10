@@ -184,7 +184,7 @@ describe("User.", function() {
             });
         });
 
-        it("Should update not empty firebaseInstanceIds", function(done) {
+        it("Should update with array of firebaseInstanceIds", function(done) {
             var createdDate = new Date().getTime();
             var lastUsedDate = new Date().getTime();
 
@@ -225,4 +225,55 @@ describe("User.", function() {
         });
     });
 
+    describe("updateActiveForAllFirabaseIdsByEmail", function() {
+        beforeEach(function(done) {
+            var createdDate = new Date().getTime();
+            var lastUsedDate = createdDate + 10;
+
+            var firebaseInstanceIds = [{
+                instanceId: "instanceId1",
+                active: 1,
+                createdDate: createdDate,
+                lastUsedDate: lastUsedDate
+            }, {
+                instanceId: "instanceId2",
+                active: 0,
+                createdDate: createdDate + 10,
+                lastUsedDate: lastUsedDate + 10
+            }];
+            db.user.create({ "email": "email@gm.com", firebaseInstanceIds: firebaseInstanceIds }, done);
+        });
+
+        it("Should update Active to false For All FirabaseIds By Email ", function(done) {
+            db.user.updateActiveForAllFirabaseIdsByEmail("email@gm.com", 0, function(err) {
+                console.log(err);
+                should.not.exist(err);
+                db.user.getByEmail("email@gm.com", function(err, user) {
+                    should.not.exist(err);
+                    should.exist(user);
+                    user.firebaseInstanceIds.should.exist;
+                    user.firebaseInstanceIds.should.have.length(2);
+                    user.firebaseInstanceIds[0].active.should.be.eql(0);
+                    user.firebaseInstanceIds[1].active.should.be.eql(0);
+                    done();
+                });
+            });
+        });
+
+        it("Should update Active to true For All FirabaseIds By Email ", function(done) {
+            db.user.updateActiveForAllFirabaseIdsByEmail("email@gm.com", true, function(err) {
+                should.not.exist(err);
+                db.user.getByEmail("email@gm.com", function(err, user) {
+
+                    should.not.exist(err);
+                    should.exist(user);
+                    user.firebaseInstanceIds.should.exist;
+                    user.firebaseInstanceIds.should.have.length(2);
+                    user.firebaseInstanceIds[0].active.should.be.eql(1);
+                    user.firebaseInstanceIds[1].active.should.be.eql(1);
+                    done();
+                });
+            });
+        });
+    });
 });
