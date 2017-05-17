@@ -13,10 +13,9 @@
     "url": "https://github.com/RandoApp/Rando-db.git"
   },
   "dependencies": {
-    "mongodb": "2.2.x",
-    "mongoose": "4.9.x",
-    "winston": "2.3.x",
-    "async": "2.4.x",
+    "mongoose": "4.5.10",
+    "winston": "2.3.1",
+    "async": "2.4.0",
     "js-yaml": "3.6.1",
     "config": "1.21.0"
   },
