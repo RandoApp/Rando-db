@@ -523,4 +523,77 @@ describe("db.user.", function() {
 
   });
 
+  describe("getLightUserMetaByOutRandoId. ", function() {
+    
+    beforeEach(function(done) {
+      var user = {
+        email: "user@rando4.me",
+        report: [{
+          reportedBy: "user1@rando4.me",
+          reason: "Reported by user1@rando4.me because randoId: 3",
+          reportedDate: 987654321,
+          randoId: "2"
+        }],
+         in: [{
+          randoId: 1,
+          report: 0,
+          delete: 0
+        }, {
+          randoId: 2,
+          report: 0,
+          delete: 0
+        }, {
+          randoId: 3,
+          report: 1,
+          delete: 1
+        }],
+        out: [{
+          randoId: 4,
+          report: 0,
+          delete: 0
+        }]
+      };
+      
+      async.parallel([
+        (parallelDone) => {
+          db.user.create(user, parallelDone);
+        },
+        (parallelDone) => {
+          db.user.create({
+            email: "user2@rando4.me"
+          }, parallelDone);
+        }
+      ], (err) => {
+        done();
+      })
+    });
+
+    it("Should find user by out randoId", (done) => {
+      db.user.getLightUserMetaByOutRandoId(4, (err, user) => {
+        should.not.exist(err);
+        should.exist(user);
+        user.report.should.have.length(1);
+        user.should.have.property("email", "user@rando4.me");
+        user.report[0].should.have.properties({
+          reportedBy: "user1@rando4.me",
+          reason: "Reported by user1@rando4.me because randoId: 3",
+          reportedDate: 987654321,
+          randoId: "2"
+        });
+        should.not.exist(user.in);
+        should.not.exist(user.out);
+        done();
+      });
+    });
+
+    it("Should not find user when randoId does not exist", (done) => {
+      db.user.getLightUserMetaByOutRandoId(412345678, (err, user) => {
+        should.not.exist(err);
+        should.not.exist(user);
+        done();
+      });
+    });
+
+  });
+
 });
