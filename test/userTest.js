@@ -672,7 +672,7 @@ describe("db.user.", function() {
     });
 
     it("Should find first banned users when offset 0", (done) => {
-      db.user.getBannedUsers(1, 0, 1, (err, users) => {
+      db.user.getBannedUsers(1, 99999, 0, 1, (err, users) => {
         should.not.exist(err);
         should.exist(users);
         users.should.have.length(1);
@@ -682,7 +682,7 @@ describe("db.user.", function() {
     });
 
     it("Should find second banned users when offset 1", (done) => {
-      db.user.getBannedUsers(1, 1, 1, (err, users) => {
+      db.user.getBannedUsers(1, 99999, 1, 1, (err, users) => {
         should.not.exist(err);
         should.exist(users);
         users.should.have.length(1);
@@ -692,7 +692,7 @@ describe("db.user.", function() {
     });
 
     it("Should find all banned users when offset 0 and big limit", (done) => {
-      db.user.getBannedUsers(1, 0, 9999, (err, users) => {
+      db.user.getBannedUsers(1, 99999, 0, 9999, (err, users) => {
         should.not.exist(err);
         should.exist(users);
         users.should.have.length(2);
@@ -703,7 +703,7 @@ describe("db.user.", function() {
     });
 
     it("Should return emtpy when offset and limit are 0", (done) => {
-      db.user.getBannedUsers(1, 0, 0, (err, users) => {
+      db.user.getBannedUsers(1, 99999, 0, 0, (err, users) => {
         should.not.exist(err);
         should.exist(users);
         users.should.have.length(0);
