@@ -596,4 +596,121 @@ describe("db.user.", function() {
 
   });
 
+  describe("getBannedUsers. ", function() {
+    
+    beforeEach(function(done) {
+      async.parallel([
+        (parallelDone) => {
+          db.user.create({
+            email: "user1@rando4.me",
+            ban: 9999,
+            report: [{
+              reportedBy: "user1@rando4.me",
+              reason: "Reported by user1@rando4.me because randoId: 3",
+              reportedDate: 987654321,
+              randoId: "2"
+            }],
+             in: [{
+              randoId: 1,
+              report: 0,
+              delete: 0
+            }, {
+              randoId: 2,
+              report: 0,
+              delete: 0
+            }, {
+              randoId: 3,
+              report: 1,
+              delete: 1
+            }],
+            out: [{
+              randoId: 4,
+              report: 0,
+              delete: 0
+            }]
+          }, parallelDone);
+        },
+        (parallelDone) => {
+          db.user.create({
+            email: "user2@rando4.me",
+            ban: 0,
+            report: [{
+              reportedBy: "user2@rando4.me",
+              reason: "Reported by user1@rando4.me because randoId: 3",
+              reportedDate: 987654321,
+              randoId: "2"
+            }],
+             in: [{
+              randoId: 3,
+              report: 1,
+              delete: 1
+            }],
+            out: [{
+              randoId: 4,
+              report: 0,
+              delete: 0
+            }]
+          }, parallelDone);
+        },
+        (parallelDone) => {
+          db.user.create({
+            email: "user3@rando4.me",
+            ban: 1,
+            report: [{
+              reportedBy: "user1@rando4.me",
+              reason: "Reported by user1@rando4.me because randoId: 3",
+              reportedDate: 987654321,
+              randoId: "2"
+            }],
+             in: [],
+            out: []
+          }, parallelDone);
+        }
+      ], (err) => {
+        done();
+      });
+    });
+
+    it("Should find first banned users when offset 0", (done) => {
+      db.user.getBannedUsers(0, 1, (err, users) => {
+        should.not.exist(err);
+        should.exist(users);
+        users.should.have.length(1);
+        users[0].should.have.property("email", "user1@rando4.me");
+        done();
+      });
+    });
+
+    it("Should find second banned users when offset 1", (done) => {
+      db.user.getBannedUsers(1, 1, (err, users) => {
+        should.not.exist(err);
+        should.exist(users);
+        users.should.have.length(1);
+        users[0].should.have.property("email", "user3@rando4.me");
+        done();
+      });
+    });
+
+    it("Should find all banned users when offset 0 and big limit", (done) => {
+      db.user.getBannedUsers(0, 9999, (err, users) => {
+        should.not.exist(err);
+        should.exist(users);
+        users.should.have.length(2);
+        users[0].should.have.property("email", "user1@rando4.me");
+        users[1].should.have.property("email", "user3@rando4.me");
+        done();
+      });
+    });
+
+    it("Should return emtpy when offset and limit are 0", (done) => {
+      db.user.getBannedUsers(0, 0, (err, users) => {
+        should.not.exist(err);
+        should.exist(users);
+        users.should.have.length(0);
+        done();
+      });
+    });
+
+  });
+
 });
