@@ -667,7 +667,7 @@ describe("db.user.", function() {
           }, parallelDone);
         }
       ], (err) => {
-        done();
+        done(err);
       });
     });
 
