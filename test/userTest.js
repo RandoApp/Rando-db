@@ -565,7 +565,7 @@ describe("db.user.", function() {
         }
       ], (err) => {
         done();
-      })
+      });
     });
 
     it("Should find user by out randoId", (done) => {
