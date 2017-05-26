@@ -32,11 +32,15 @@ describe("db.user.", () => {
           randoId: 3,
           report: 1,
           delete: 1
+        }, {
+          randoId: 9
         }],
         out: [{
           randoId: 4,
           report: 0,
           delete: 0
+        }, {
+          randoId: 6
         }]
       };
       
@@ -49,10 +53,11 @@ describe("db.user.", () => {
         db.user.getByEmailLight("user@rando4.me", (err, user) => {
           should.not.exist(err);
           should.exist(user);
-          user.in.should.have.length(3);
+          user.in.should.have.length(4);
           user.in[0].should.have.properties({randoId: "1", report: 0, delete: 0});
           user.in[1].should.have.properties({randoId: "2", report: 1, delete: 0});
           user.in[2].should.have.properties({randoId: "3", report: 1, delete: 1});
+          user.in[3].should.have.properties({randoId: "9"});
           done();
         });
       });
@@ -64,10 +69,42 @@ describe("db.user.", () => {
         db.user.getByEmailLight("user@rando4.me", (err, user) => {
           should.not.exist(err);
           should.exist(user);
-          user.in.should.have.length(3);
+          user.in.should.have.length(4);
           user.in[0].should.have.properties({randoId: "1", report: 0, delete: 0});
           user.in[1].should.have.properties({randoId: "2", report: 0, delete: 0});
           user.in[2].should.have.properties({randoId: "3", report: 0, delete: 1});
+          user.in[3].should.have.properties({randoId: "9"});
+          done();
+        });
+      });
+    });
+
+    it("Should update report to 1 for IN rando by email and randoId when rating field doesn't exist", (done) => {
+      db.user.updateInRandoProperties("user@rando4.me", 9, {report: 1}, (err) => {
+        should.not.exist(err);
+        db.user.getByEmailLight("user@rando4.me", (err, user) => {
+          should.not.exist(err);
+          should.exist(user);
+          user.in.should.have.length(4);
+          user.in[0].should.have.properties({randoId: "1", report: 0, delete: 0});
+          user.in[1].should.have.properties({randoId: "2", report: 0, delete: 0});
+          user.in[2].should.have.properties({randoId: "3", report: 1, delete: 1});
+          user.in[3].should.have.properties({randoId: "9", report: 1});
+          done();
+        });
+      });
+    });
+
+
+    it("Should update report to 1 for OUT rando by email and randoId when rating field doesn't exist", (done) => {
+      db.user.updateOutRandoProperties("user@rando4.me", 6, {report: 1}, (err) => {
+        should.not.exist(err);
+        db.user.getByEmailLight("user@rando4.me", (err, user) => {
+          should.not.exist(err);
+          should.exist(user);
+          user.out.should.have.length(2);
+          user.out[0].should.have.properties({randoId: "4", report: 0, delete: 0});
+          user.out[1].should.have.properties({randoId: "6", report: 1});
           done();
         });
       });
