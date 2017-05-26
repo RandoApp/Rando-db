@@ -236,13 +236,13 @@ describe("db.user.", () => {
     });
 
     it("Should update rating to 5 for out rando by email and randoId when rating field doesn't exist", (done) => {
-      db.user.updateOutRandoProperties("user@rando4.me", 4, {rating: 5}, (err) => {
+      db.user.updateOutRandoProperties("user@rando4.me", 6, {rating: 5}, (err) => {
         should.not.exist(err);
         db.user.getByEmailLight("user@rando4.me", (err, user) => {
           should.not.exist(err);
           should.exist(user);
           user.out.should.have.length(3);
-          user.out[0].should.have.properties({randoId: "4", report: 0, delete: 0, rating: 5});
+          user.out[0].should.have.properties({randoId: "4", report: 0, delete: 0, rating: 0});
           user.out[1].should.have.properties({randoId: "5", report: 0, delete: 0, rating: 4});
           user.out[2].should.have.properties({randoId: "6", report: 0, delete: 0, rating: 5});
           done();
