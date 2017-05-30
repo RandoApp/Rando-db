@@ -75,6 +75,26 @@ describe("db.user.", function() {
         });
       });
     });
+
+    it("Should throw errr when update user with not allowed field", function(done) {
+      db.user.getByEmail("email@gm.com", function(err, user) {
+        should.exist(user);
+        should.not.exist(err);
+        user.email.should.be.eql("email@gm.com");
+        user.authToken = "authTokenValue";
+        user.notAllowed = "Not Allowed";
+        db.user.update(user, function(err) {
+          should.not.exist(err);
+          db.user.getByEmail("email@gm.com", function(err, user) {
+            should.not.exist(err);
+            user.should.not.have.property("notAllowed");
+            user.email.should.be.eql("email@gm.com");
+            user.authToken.should.be.eql("authTokenValue");
+            done();
+          });
+        });
+      });
+    });
   });
 
   describe("updateUserMetaByEmail", function() {
@@ -838,7 +858,6 @@ describe("getLightOutRandoByOrigianlFileName. ", function() {
       db.user.getLightOutRandoByOrigianlFileName("user_NOT_EXIST@rando4.me", "file_name_5.jpg" ,(err, user) => {
         should.not.exist(err);
         should.not.exist(user);
-        console.log(user);
         done();
       });
     });
@@ -1010,7 +1029,8 @@ describe("getLightOutRandosForPeriod. ", function() {
               email: "user1@rando4.me",
               report: 1,
               delete: 1,
-              creation: 300
+              creation: 300,
+              originalFileName : "file_name_3.jpg"
             }]
           }, parallelDone);
         },
@@ -1048,34 +1068,33 @@ describe("getLightOutRandosForPeriod. ", function() {
     });
 
     it("Should return empty array when no randos taken in range", (done) => {
-      db.user.getLightOutRandosForPeriod(10, 50 ,(err, user) => {
+      db.user.getLightOutRandosForPeriod(10, 50 ,(err, randos) => {
         should.not.exist(err);
-        should.exist(user);
-        should.exist(user.out);
-        user.out.should.have.length(2);
+        should.exist(randos);
+        randos.should.have.length(0);
         done();
       });
     });
 
-    it("Should return all randos when exist by email", (done) => {
-      db.user.getLightOutRandosForPeriod(0, 300 ,(err, user) => {
+    it("Should return 2 randos when period includes 2 randos", (done) => {
+      db.user.getLightOutRandosForPeriod(250, 300 ,(err, randos) => {
         should.not.exist(err);
-        should.exist(user);
-        user.should.not.have.property("email");
-        user.out.should.have.lengthOf(2);
-        user.out[0].should.not.have.property("email");
-        user.out[0].should.not.have.property("delete");
-        user.out[0].should.not.have.property("report");   
-        user.out[0].should.not.have.property("originalFileName");
-        user.out[0].should.have.property("randoId", "4");
-        user.out[0].should.have.property("creation", 100);
+        should.exist(randos);
+        randos.should.not.have.property("email");
+        randos.should.have.lengthOf(2);
+        randos[0].should.have.property("email", "user1@rando4.me");
+        randos[0].should.have.property("delete", 1);
+        randos[0].should.have.property("report", 1);   
+        randos[0].should.have.property("originalFileName", "file_name_3.jpg");
+        randos[0].should.have.property("randoId", "3");
+        randos[0].should.have.property("creation", 300);
 
-        user.out[1].should.not.have.property("email");
-        user.out[1].should.not.have.property("delete");
-        user.out[1].should.not.have.property("report");   
-        user.out[1].should.not.have.property("originalFileName");
-        user.out[1].should.have.property("randoId", "10");
-        user.out[1].should.have.property("creation", 200); 
+        randos[1].should.have.property("email", "user2@rando4.me");
+        randos[1].should.have.property("delete", 0);
+        randos[1].should.have.property("report", 0);   
+        randos[1].should.have.property("originalFileName");
+        randos[1].should.have.property("randoId", "5");
+        randos[1].should.have.property("creation", 250); 
         done();
       });
     });
