@@ -989,7 +989,6 @@ describe("getAllLightOutRandosByEmail. ", function() {
   });
 
 describe("getLightOutRandosForPeriod. ", function() {
-    
     beforeEach(function(done) {
       async.parallel([
         (parallelDone) => {
@@ -1076,11 +1075,10 @@ describe("getLightOutRandosForPeriod. ", function() {
       });
     });
 
-    it("Should return 2 randos when period includes 2 randos", (done) => {
+    it("Should return 2 randos when period includes 2 randos from different users", (done) => {
       db.user.getLightOutRandosForPeriod(250, 300 ,(err, randos) => {
         should.not.exist(err);
         should.exist(randos);
-        randos.should.not.have.property("email");
         randos.should.have.lengthOf(2);
         randos[0].should.have.property("email", "user1@rando4.me");
         randos[0].should.have.property("delete", 1);
@@ -1092,9 +1090,31 @@ describe("getLightOutRandosForPeriod. ", function() {
         randos[1].should.have.property("email", "user2@rando4.me");
         randos[1].should.have.property("delete", 0);
         randos[1].should.have.property("report", 0);   
-        randos[1].should.have.property("originalFileName");
+        randos[1].should.have.property("originalFileName", "file_name_5.jpg");
         randos[1].should.have.property("randoId", "5");
         randos[1].should.have.property("creation", 250); 
+        done();
+      });
+    });
+
+    it("Should return 2 randos when period includes 2 randos from one user", (done) => {
+      db.user.getLightOutRandosForPeriod(100, 200 ,(err, randos) => {
+        should.not.exist(err);
+        should.exist(randos);
+        randos.should.have.lengthOf(2);
+        randos[0].should.have.property("email", "user1@rando4.me");
+        randos[0].should.have.property("delete", 0);
+        randos[0].should.have.property("report", 0);   
+        randos[0].should.have.property("originalFileName", "file_name_4.jpg");
+        randos[0].should.have.property("randoId", "4");
+        randos[0].should.have.property("creation", 100);
+
+        randos[1].should.have.property("email", "user1@rando4.me");
+        randos[1].should.have.property("delete", 0);
+        randos[1].should.have.property("report", 0);   
+        randos[1].should.have.property("originalFileName", "file_name_10.jpg");
+        randos[1].should.have.property("randoId", "10");
+        randos[1].should.have.property("creation", 200); 
         done();
       });
     });
