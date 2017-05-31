@@ -76,7 +76,7 @@ describe("db.user.", function() {
       });
     });
 
-    it("Should throw errr when update user with not allowed field", function(done) {
+    it("Should Not throw err when update user with not allowed field", function(done) {
       db.user.getByEmail("email@gm.com", function(err, user) {
         should.exist(user);
         should.not.exist(err);
@@ -1066,7 +1066,7 @@ describe("getLightOutRandosForPeriod. ", function() {
     });
 
     it("Should return error when no start and end are not a numbers", (done) => {
-      db.user.getLightOutRandosForPeriod("ten", "fifty" ,(err, randos) => {
+      db.user.getLightOutRandosForPeriod("ten bla", "fifty bla" ,(err, randos) => {
         should.exist(err);
         should.not.exist(randos);
         randos.should.have.length(0);
