@@ -866,7 +866,6 @@ describe("getLightOutRandoByOrigianlFileName. ", function() {
       db.user.getLightOutRandoByOrigianlFileName("user2@rando4.me", "file_name_Not_Exist.jpg" ,(err, user) => {
         should.not.exist(err);
         should.not.exist(user);
-        console.log(user);
         done();
       });
     });
@@ -1063,6 +1062,15 @@ describe("getLightOutRandosForPeriod. ", function() {
         }
       ], (err) => {
         done(err);
+      });
+    });
+
+    it("Should return error when no start and end are not a numbers", (done) => {
+      db.user.getLightOutRandosForPeriod("ten", "fifty" ,(err, randos) => {
+        should.exist(err);
+        should.not.exist(randos);
+        randos.should.have.length(0);
+        done();
       });
     });
 
