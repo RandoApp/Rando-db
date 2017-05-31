@@ -6,5 +6,11 @@ node_js:
   - node
 services:
   - mongodb
+addons:
+  apt:
+    sources:
+    - mongodb-3.0-precise
+    packages:
+    - mongodb-org-server
 after_script:
   - npm run-script coveralls
