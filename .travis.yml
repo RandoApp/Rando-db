@@ -4,13 +4,13 @@ node_js:
   - 5
   - 6
   - node
-services:
-  - mongodb
 addons:
   apt:
     sources:
-    - mongodb-3.0-precise
+      - mongodb-upstart
+      - mongodb-3.0-precise
     packages:
-    - mongodb-org-server
+      - mongodb-org-server
+      - mongodb-org-shell
 after_script:
   - npm run-script coveralls
