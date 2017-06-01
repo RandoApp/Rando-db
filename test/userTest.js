@@ -19,7 +19,7 @@ describe("db.user.", function() {
   });
 
   describe("create", function() {
-    /*it("Should create user and lower case email", function(done) {
+    it("Should create user and lower case email", function(done) {
       db.user.create({ "email": "EMAIL@gm.com", "authToken": "authTokenValue" }, function() {
         db.user.getAll(function(err, users) {
           should.not.exist(err);
@@ -30,7 +30,7 @@ describe("db.user.", function() {
           done();
         });
       });
-    });*/
+    });
 
     it("Should fail create when user email is already taken", function(done) {
       db.user.create({ "email": "email@gm.com" }, function() {
