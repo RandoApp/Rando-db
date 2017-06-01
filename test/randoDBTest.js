@@ -5,6 +5,10 @@ var should = require("should");
 var async = require("async");
 
 describe("randoDB.", () => {
+	after((done) => {
+		db.disconnect(done);
+	});
+
 	it("Should connect successfully and callback without error and disconnect", (done) => {
 		 db.connect(config.test.db.url,(err)=> {
 		 	should.not.exist(err);
