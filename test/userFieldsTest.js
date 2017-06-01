@@ -3,20 +3,23 @@ var config = require("config");
 var db = require("../lib/randoDB");
 var should = require("should");
 var async = require("async");
-var testHelper = require("./testHelper");
 
 describe("db.user.", () => {
 
-  before((done) => {
-    testHelper.connectToDBOnce(done);
+  before(done => {
+    db.connect(config.test.db.url,done);
   });
 
-  afterEach((done) => {
+  after(done => {
+    db.disconnect(done);
+  });
+
+  afterEach(done => {
     db.user.removeAll(done);
   });
 
   describe("Report field. ", function() {
-    beforeEach( (mydone) => {
+    beforeEach(mydone => {
       var user = {
         email: "user@rando4.me",
         report: [],
@@ -47,8 +50,8 @@ describe("db.user.", () => {
       db.user.create(user, mydone);
     });
 
-    it("Should update report to 1 for in rando by email and randoId", (done) => {
-      db.user.updateInRandoProperties("user@rando4.me", 2, {report: 1}, (err) => {
+    it("Should update report to 1 for in rando by email and randoId", done => {
+      db.user.updateInRandoProperties("user@rando4.me", 2, {report: 1}, err => {
         should.not.exist(err);
         db.user.getByEmailLight("user@rando4.me", (err, user) => {
           should.not.exist(err);
@@ -63,8 +66,8 @@ describe("db.user.", () => {
       });
     });
 
-    it("Should update report to 0 for in rando by email and randoId", (done) => {
-      db.user.updateInRandoProperties("user@rando4.me", 3, {report: 0}, (err) => {
+    it("Should update report to 0 for in rando by email and randoId", done => {
+      db.user.updateInRandoProperties("user@rando4.me", 3, {report: 0}, err => {
         should.not.exist(err);
         db.user.getByEmailLight("user@rando4.me", (err, user) => {
           should.not.exist(err);
@@ -80,7 +83,7 @@ describe("db.user.", () => {
     });
 
     it("Should update report to 1 for IN rando by email and randoId when rating field doesn't exist", (done) => {
-      db.user.updateInRandoProperties("user@rando4.me", 9, {report: 1}, (err) => {
+      db.user.updateInRandoProperties("user@rando4.me", 9, {report: 1}, err => {
         should.not.exist(err);
         db.user.getByEmailLight("user@rando4.me", (err, user) => {
           should.not.exist(err);
@@ -97,7 +100,7 @@ describe("db.user.", () => {
 
 
     it("Should update report to 1 for OUT rando by email and randoId when rating field doesn't exist", (done) => {
-      db.user.updateOutRandoProperties("user@rando4.me", 6, {report: 1}, (err) => {
+      db.user.updateOutRandoProperties("user@rando4.me", 6, {report: 1}, err => {
         should.not.exist(err);
         db.user.getByEmailLight("user@rando4.me", (err, user) => {
           should.not.exist(err);
@@ -144,8 +147,8 @@ describe("db.user.", () => {
       db.user.create(user, done);
     });
 
-    it("Should update delete to 1 for in rando by email and randoId", (done) => {
-      db.user.updateInRandoProperties("user@rando4.me", 2, {delete: 1}, (err) => {
+    it("Should update delete to 1 for in rando by email and randoId", done => {
+      db.user.updateInRandoProperties("user@rando4.me", 2, {delete: 1}, err => {
         should.not.exist(err);
         db.user.getByEmailLight("user@rando4.me", (err, user) => {
           should.not.exist(err);
@@ -160,8 +163,8 @@ describe("db.user.", () => {
       });
     });
 
-    it("Should update delete to 0 for in rando by email and randoId", (done) => {
-      db.user.updateInRandoProperties("user@rando4.me", 3, {delete: 0}, (err) => {
+    it("Should update delete to 0 for in rando by email and randoId", done => {
+      db.user.updateInRandoProperties("user@rando4.me", 3, {delete: 0}, err => {
         should.not.exist(err);
         db.user.getByEmailLight("user@rando4.me", (err, user) => {
           should.not.exist(err);
@@ -177,8 +180,8 @@ describe("db.user.", () => {
     });
 
 
-    it("Should update delete to 1 for IN rando by email and randoId when delete field doesn't exist", (done) => {
-      db.user.updateInRandoProperties("user@rando4.me", 9, {delete: 1}, (err) => {
+    it("Should update delete to 1 for IN rando by email and randoId when delete field doesn't exist", done => {
+      db.user.updateInRandoProperties("user@rando4.me", 9, {delete: 1}, err => {
         should.not.exist(err);
         db.user.getByEmailLight("user@rando4.me", (err, user) => {
           should.not.exist(err);
@@ -193,8 +196,8 @@ describe("db.user.", () => {
       });
     });
 
-    it("Should update delete to 1 for OUT rando by email and randoId when delete field doesn't exist", (done) => {
-      db.user.updateOutRandoProperties("user@rando4.me", 6, {delete: 1}, (err) => {
+    it("Should update delete to 1 for OUT rando by email and randoId when delete field doesn't exist", done => {
+      db.user.updateOutRandoProperties("user@rando4.me", 6, {delete: 1}, err => {
         should.not.exist(err);
         db.user.getByEmailLight("user@rando4.me", (err, user) => {
           should.not.exist(err);
@@ -209,7 +212,7 @@ describe("db.user.", () => {
   });
 
   describe("Rating field. ", function() {
-    beforeEach( (done) => {
+    beforeEach( done => {
       var user = {
         email: "user@rando4.me",
         report: [],
@@ -249,8 +252,8 @@ describe("db.user.", () => {
       db.user.create(user, done);
     });
 
-    it("Should update rating to 5 for in rando by email and randoId", (done) => {
-      db.user.updateInRandoProperties("user@rando4.me", 2, {rating: 5}, (err) => {
+    it("Should update rating to 5 for in rando by email and randoId", done => {
+      db.user.updateInRandoProperties("user@rando4.me", 2, {rating: 5}, err => {
         should.not.exist(err);
         db.user.getByEmailLight("user@rando4.me", (err, user) => {
           should.not.exist(err);
@@ -264,8 +267,8 @@ describe("db.user.", () => {
       });
     });
 
-    it("Should update rating to 0 for in rando by email and randoId", (done) => {
-      db.user.updateInRandoProperties("user@rando4.me", 3, {rating: 0}, (err) => {
+    it("Should update rating to 0 for in rando by email and randoId", done => {
+      db.user.updateInRandoProperties("user@rando4.me", 3, {rating: 0}, err => {
         should.not.exist(err);
         db.user.getByEmailLight("user@rando4.me", (err, user) => {
           should.not.exist(err);
@@ -279,8 +282,8 @@ describe("db.user.", () => {
       });
     });
 
-    it("Should update rating to 0 for out rando by email and randoId", (done) => {
-      db.user.updateOutRandoProperties("user@rando4.me", 5, {rating: 0}, (err) => {
+    it("Should update rating to 0 for out rando by email and randoId", done => {
+      db.user.updateOutRandoProperties("user@rando4.me", 5, {rating: 0}, err => {
         should.not.exist(err);
         db.user.getByEmailLight("user@rando4.me", (err, user) => {
           should.not.exist(err);
@@ -294,8 +297,8 @@ describe("db.user.", () => {
       });
     });
 
-    it("Should update rating to 5 for out rando by email and randoId", (done) => {
-      db.user.updateOutRandoProperties("user@rando4.me", 4, {rating: 5}, (err) => {
+    it("Should update rating to 5 for out rando by email and randoId", done => {
+      db.user.updateOutRandoProperties("user@rando4.me", 4, {rating: 5}, err => {
         should.not.exist(err);
         db.user.getByEmailLight("user@rando4.me", (err, user) => {
           should.not.exist(err);
@@ -309,8 +312,8 @@ describe("db.user.", () => {
       });
     });
 
-    it("Should update rating to 5 for out rando by email and randoId when rating field doesn't exist", (done) => {
-      db.user.updateOutRandoProperties("user@rando4.me", 6, {rating: 5}, (err) => {
+    it("Should update rating to 5 for out rando by email and randoId when rating field doesn't exist", done => {
+      db.user.updateOutRandoProperties("user@rando4.me", 6, {rating: 5}, err => {
         should.not.exist(err);
         db.user.getByEmailLight("user@rando4.me", (err, user) => {
           should.not.exist(err);
