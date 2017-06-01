@@ -1005,10 +1005,10 @@ describe("getLightOutRandosForPeriod. ", function() {
       });
     });
 
-    it("Should return error when no start and end are not a numbers", (done) => {
+    it("Should return empty arrey when start and end are not a numbers", (done) => {
       db.user.getLightOutRandosForPeriod("ten bla", "fifty bla" ,(err, randos) => {
-        should.exist(err);
-        should.not.exist(randos);
+        should.not.exist(err);
+        should.exist(randos);
         randos.should.have.length(0);
         done();
       });
@@ -1397,8 +1397,8 @@ describe("updateDeleteFlagForOutRando. ", function() {
       });
     });
 
-    it("Should do nothing when no such user by email", (done) => {
-      db.user.updateDeleteFlagForOutRando("user10@rando4.me", 5, 1,(err, result) => {
+    it("Should do nothing when updating delete flag for out rando and no such user by email", (done) => {
+      db.user.updateOutRandoProperties("user10@rando4.me", 5, {delete: 1}, (err, result) => {
         should.not.exist(err);
         should.exist(result);
         result.nModified.should.be.eql(0);
@@ -1431,8 +1431,8 @@ describe("updateDeleteFlagForOutRando. ", function() {
       });
     });
 
-    it("Should do nothing when user doesn't have such rando by Id", (done) => {
-      db.user.updateDeleteFlagForOutRando("user1@rando4.me", 10, 1,(err, result) => {
+    it("Should do nothing when updating delete flag for out rando and user doesn't have such out rando by Id", (done) => {
+      db.user.updateOutRandoProperties("user1@rando4.me", 10, {delete: 1}, (err, result) => {
         should.not.exist(err);
         should.exist(result);
         result.nModified.should.be.eql(0);
@@ -1465,8 +1465,8 @@ describe("updateDeleteFlagForOutRando. ", function() {
       });
     });
 
-    it("Should update delete flag for rando by user email and by randoId", (done) => {
-      db.user.updateDeleteFlagForOutRando("user1@rando4.me", 5, 1,(err, result) => {
+    it("Should update delete flag for rando out by user email and by randoId", (done) => {
+      db.user.updateOutRandoProperties("user1@rando4.me", 5, {delete: 1}, (err, result) => {
         should.not.exist(err);
         should.exist(result);
         result.should.have.properties({nModified:1, n:1, ok : 1});
@@ -1498,7 +1498,7 @@ describe("updateDeleteFlagForOutRando. ", function() {
     });
   });
 
-describe("updateDeleteFlagForInRando. ", function() {
+describe("updateInRandoProperties. ", function() {
     
     beforeEach(function(done) {
       async.parallel([
@@ -1539,8 +1539,8 @@ describe("updateDeleteFlagForInRando. ", function() {
       });
     });
 
-    it("Should do nothing when no such user by email", (done) => {
-      db.user.updateDeleteFlagForInRando("user10@rando4.me", 5, 1,(err, result) => {
+    it("Should do nothing when updating delete flag for in rando and no such user by email", (done) => {
+      db.user.updateInRandoProperties("user10@rando4.me", 5, {delete: 1}, (err, result) => {
         should.not.exist(err);
         should.exist(result);
         result.nModified.should.be.eql(0);
@@ -1573,8 +1573,8 @@ describe("updateDeleteFlagForInRando. ", function() {
       });
     });
 
-    it("Should do nothing when user doesn't have such rando by Id", (done) => {
-      db.user.updateDeleteFlagForInRando("user1@rando4.me", 10, 1,(err, result) => {
+    it("Should do nothing when updating delete flag for in rando and user doesn't have such in rando by Id", (done) => {
+      db.user.updateInRandoProperties("user1@rando4.me", 10, {delete: 1}, (err, result) => {
         should.not.exist(err);
         should.exist(result);
         result.nModified.should.be.eql(0);
@@ -1607,8 +1607,8 @@ describe("updateDeleteFlagForInRando. ", function() {
       });
     });
 
-    it("Should update delete flag for rando by user email and by randoId", (done) => {
-      db.user.updateDeleteFlagForInRando("user1@rando4.me", 5, 1,(err, result) => {
+    it("Should update delete flag for in rando by user email and by randoId", (done) => {
+      db.user.updateInRandoProperties("user1@rando4.me", 5, {delete: 1}, (err, result) => {
         should.not.exist(err);
         should.exist(result);
         result.should.have.properties({nModified:1, n:1, ok : 1});
