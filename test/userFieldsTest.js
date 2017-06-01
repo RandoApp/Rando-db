@@ -7,11 +7,11 @@ var async = require("async");
 describe("db.user.", () => {
 
   before(done => {
-     db.connect(config.test.db.url,done);
+    db.connect(config.test.db.url,done);
   });
 
   after(done => {
-     db.disconnect(done);
+    db.disconnect(done);
   });
 
   afterEach(done => {
