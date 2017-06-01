@@ -7,7 +7,7 @@ addons:
   apt:
     sources:
       - mongodb-upstart
-      - mongodb-3.2-precise
+      - mongodb-3.4-precise
     packages:
       - mongodb-org-server
       - mongodb-org-shell
@@ -16,4 +16,4 @@ before_script:
 before_install: 
   - if [[ `npm -v` != 4* ]]; then npm i -g npm@4; fi
 script:
-  - npm test
+  - npm run-script coveralls
