@@ -3,12 +3,15 @@ var config = require("config");
 var db = require("../lib/randoDB");
 var should = require("should");
 var async = require("async");
-var testHelper = require("./testHelper");
 
 describe("db.user.", function() {
   
   before((done) => {
-    testHelper.connectToDBOnce(done);
+     db.connect(config.test.db.url,done);
+  });
+
+  after((done) => {
+     db.disconnect(done);
   });
 
   afterEach((done) => {
