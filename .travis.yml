@@ -3,8 +3,16 @@ node_js:
   - 4
   - 7
   - node
-services:
-  - mongodb
+addons:
+  apt:
+    sources:
+      - mongodb-upstart
+      - mongodb-3.2-precise
+    packages:
+      - mongodb-org-server
+      - mongodb-org-shell
+before_script:
+  - sleep 10
 before_install: 
   - if [[ `npm -v` != 4* ]]; then npm i -g npm@4; fi
 script:
