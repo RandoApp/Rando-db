@@ -1,8 +1,7 @@
 language: node_js
 node_js:
   - 4
-  - 5
-  - 6
+  - 7
   - node
 addons:
   apt:
@@ -14,5 +13,5 @@ addons:
       - mongodb-org-shell
 before_script:
   - sleep 10
-after_script:
+script:
   - npm run-script coveralls

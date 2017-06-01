@@ -5,17 +5,16 @@ var should = require("should");
 var async = require("async");
 
 describe("db.user.", function() {
-  before(function(done) {
-    db.connect(config.test.db.url, function() {
-      done();
-    });
+  
+  before((done) => {
+     db.connect(config.test.db.url,done);
   });
 
-  after(function(done) {
-    db.disconnect(done);
+  after((done) => {
+     db.disconnect(done);
   });
 
-  afterEach(function(done) {
+  afterEach((done) => {
     db.user.removeAll(done);
   });
 
@@ -383,65 +382,6 @@ describe("db.user.", function() {
           user.firebaseInstanceIds[0].instanceId.should.be.eql("instanceId1");
           user.firebaseInstanceIds[1].instanceId.should.be.eql("instanceId2");
           user.firebaseInstanceIds[1].active.should.be.eql(0);
-          done();
-        });
-      });
-    });
-  });
-
-  describe("updateReportFlagForInRando. ", function() {
-    beforeEach(function(done) {
-      var user = {
-        email: "user@rando4.me",
-        report: [],
-        in: [{
-          randoId: 1,
-          report: 0,
-          delete: 0
-        }, {
-          randoId: 2,
-          report: 0,
-          delete: 0
-        }, {
-          randoId: 3,
-          report: 1,
-          delete: 1
-        }],
-        out: [{
-          randoId: 4,
-          report: 0,
-          delete: 0
-        }]
-      };
-      
-      db.user.create(user, done);
-    });
-
-    it("Should update report to 1 for in rando by email and randoId", (done) => {
-      db.user.updateReportFlagForInRando("user@rando4.me", 2, 1, (err) => {
-        should.not.exist(err);
-        db.user.getByEmailLight("user@rando4.me", (err, user) => {
-          should.not.exist(err);
-          should.exist(user);
-          user.in.should.have.length(3);
-          user.in[0].should.have.properties({randoId: "1", report: 0, delete: 0});
-          user.in[1].should.have.properties({randoId: "2", report: 1, delete: 0});
-          user.in[2].should.have.properties({randoId: "3", report: 1, delete: 1});
-          done();
-        });
-      });
-    });
-
-    it("Should update report to 0 for in rando by email and randoId", (done) => {
-      db.user.updateReportFlagForInRando("user@rando4.me", 3, 0, (err) => {
-        should.not.exist(err);
-        db.user.getByEmailLight("user@rando4.me", (err, user) => {
-          should.not.exist(err);
-          should.exist(user);
-          user.in.should.have.length(3);
-          user.in[0].should.have.properties({randoId: "1", report: 0, delete: 0});
-          user.in[1].should.have.properties({randoId: "2", report: 0, delete: 0});
-          user.in[2].should.have.properties({randoId: "3", report: 0, delete: 1});
           done();
         });
       });
