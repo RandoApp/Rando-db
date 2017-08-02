@@ -46,7 +46,7 @@ describe("db.user.", () => {
           randoId: 6
         }]
       };
-      
+
       db.user.create(user, mydone);
     });
 
@@ -143,7 +143,7 @@ describe("db.user.", () => {
           randoId: 6
         }]
       };
-      
+
       db.user.create(user, done);
     });
 
@@ -248,7 +248,7 @@ describe("db.user.", () => {
           delete: 0
         }]
       };
-      
+
       db.user.create(user, done);
     });
 
@@ -328,4 +328,291 @@ describe("db.user.", () => {
     });
   });
 
+  describe("Queries projection. ", function() {
+    beforeEach( done => {
+      var fullUser = {
+        email: "user@rando4.me",
+        authToken: "authToken",
+        facebookId: "facebookId",
+        googleId: "googleId",
+        anonymousId: "anonymousId",
+        password: "password",
+        ban: 123,
+        ip: "ip",
+        firebaseInstanceIds: [{
+          instanceId: "instanceId",
+          active: 123,
+          createdDate: 123,
+          lastUsedDate: 123
+        }],
+        report: [{
+          reportedBy: "user1@rando4.me",
+          reason: "reason",
+          reportedDate: 123,
+          randoId: "randoId"
+        }],
+        in: [{
+          email: "user@rando4.me",
+          randoId: "123",
+          originalFileName: "originalFileName",
+          chosenRandoId: "chosenRandoId",
+          strangerRandoId: "strangerRandoId",
+          creation: 123,
+          ip: "ip",
+          location: {
+            latitude: 123,
+            longitude: 123
+          },
+          imageURL: "imageURL",
+          imageSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          mapURL: "mapURL",
+          mapSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          strangerMapURL: "strangerMapURL",
+          strangerMapSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          tags: ["tag1"],
+          delete: 123,
+          report: 123,
+          rating: 123
+        }],
+        out: [{
+          email: "user1@rando4.me",
+          randoId: "randoId",
+          originalFileName: "originalFileName",
+          chosenRandoId: "chosenRandoId",
+          strangerRandoId: "strangerRandoId",
+          creation: 123,
+          ip: "ip",
+          location: {
+            latitude: 123,
+            longitude: 123
+          },
+          imageURL: "imageURL",
+          imageSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          mapURL: "mapURL",
+          mapSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          strangerMapURL: "strangerMapURL",
+          strangerMapSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          tags: ["tag1"],
+          delete: 123,
+          report: 123,
+          rating: 123
+        }]
+      };
+
+      db.user.create(fullUser, done);
+    });
+
+    it("Should get all filds in getLightUserWithInAndOutByEmail", done => {
+      db.user.getLightUserWithInAndOutByEmail("user@rando4.me", (err, user) => {
+        should.not.exist(err);
+        user.should.have.properties({
+          email: "user@rando4.me",
+          authToken: "authToken",
+          ban: 123,
+          ip: "ip"
+        });
+
+        user.firebaseInstanceIds[0].should.have.properties({
+          instanceId: "instanceId",
+          active: 123,
+          createdDate: 123,
+          lastUsedDate: 123
+        });
+
+        user.should.not.have.property("report");
+
+        user.in[0].should.have.properties({
+          email: "user@rando4.me",
+          randoId: "123",
+          creation: 123,
+          imageURL: "imageURL",
+          imageSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          mapURL: "mapURL",
+          mapSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          delete: 123,
+          report: 123,
+          rating: 123
+        });
+
+        user.out[0].should.have.properties({
+          email: "user1@rando4.me",
+          randoId: "randoId",
+          creation: 123,
+          imageURL: "imageURL",
+          imageSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          strangerMapURL: "strangerMapURL",
+          strangerMapSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          tags: ["tag1"],
+          delete: 123,
+          report: 123,
+          rating: 123
+        });
+        done();
+      });
+    });
+
+    it("Should get all filds in getAllLightInAndOutRandosByEmail", done => {
+      db.user.getAllLightInAndOutRandosByEmail("user@rando4.me", (err, user) => {
+        should.not.exist(err);
+        user.should.not.have.property("email");
+        user.should.not.have.property("authToken");
+        user.should.not.have.property("facebookId");
+        user.should.not.have.property("googleId");
+        user.should.not.have.property("anonymousId");
+        user.should.not.have.property("password");
+        user.should.not.have.property("ban");
+        user.should.not.have.property("ip");
+        user.should.not.have.property("firebaseInstanceIds");
+        user.should.not.have.property("report");
+
+        user.in[0].should.have.properties({
+          randoId: "123",
+          creation: 123,
+          imageURL: "imageURL",
+          imageSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          mapURL: "mapURL",
+          mapSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          delete: 123,
+          report: 123,
+          rating: 123
+        });
+
+        user.out[0].should.have.properties({
+          randoId: "randoId",
+          creation: 123,
+          imageURL: "imageURL",
+          imageSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          strangerMapURL: "strangerMapURL",
+          strangerMapSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          tags: ["tag1"],
+          delete: 123,
+          report: 123,
+          rating: 123
+        });
+        done();
+      });
+    });
+
+    it("Should get all filds in getAllLightInAndOutRandosByEmailForExchange", done => {
+      db.user.getLightUserWithInAndOutByEmail("user@rando4.me", (err, user) => {
+        should.not.exist(err);
+        user.should.have.properties({
+          email: "user@rando4.me",
+          authToken: "authToken",
+          ban: 123,
+          ip: "ip"
+        });
+
+        user.firebaseInstanceIds[0].should.have.properties({
+          instanceId: "instanceId",
+          active: 123,
+          createdDate: 123,
+          lastUsedDate: 123
+        });
+
+        user.should.not.have.property("report");
+
+        user.in[0].should.have.properties({
+          email: "user@rando4.me",
+          randoId: "123",
+          creation: 123,
+          imageURL: "imageURL",
+          imageSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          mapURL: "mapURL",
+          mapSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          delete: 123,
+          report: 123,
+          rating: 123
+        });
+
+        user.out[0].should.have.properties({
+          email: "user1@rando4.me",
+          randoId: "randoId",
+          creation: 123,
+          imageURL: "imageURL",
+          imageSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          strangerMapURL: "strangerMapURL",
+          strangerMapSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          tags: ["tag1"],
+          delete: 123,
+          report: 123,
+          rating: 123
+        });
+        done();
+      });
+    });
+
+  });
 });
