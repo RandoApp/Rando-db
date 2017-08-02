@@ -549,5 +549,70 @@ describe("db.user.", () => {
       });
     });
 
+    it("Should get all filds in getAllLightInAndOutRandosByEmailForExchange", done => {
+      db.user.getLightUserWithInAndOutByEmail("user@rando4.me", (err, user) => {
+        should.not.exist(err);
+        user.should.have.properties({
+          email: "user@rando4.me",
+          authToken: "authToken",
+          ban: 123,
+          ip: "ip"
+        });
+
+        user.firebaseInstanceIds[0].should.have.properties({
+          instanceId: "instanceId",
+          active: 123,
+          createdDate: 123,
+          lastUsedDate: 123
+        });
+
+        user.should.not.have.property("report");
+
+        user.in[0].should.have.properties({
+          email: "user@rando4.me",
+          randoId: "123",
+          creation: 123,
+          imageURL: "imageURL",
+          imageSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          mapURL: "mapURL",
+          mapSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          delete: 123,
+          report: 123,
+          rating: 123
+        });
+
+        user.out[0].should.have.properties({
+          email: "user1@rando4.me",
+          randoId: "randoId",
+          creation: 123,
+          imageURL: "imageURL",
+          imageSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          strangerMapURL: "strangerMapURL",
+          strangerMapSizeURL: {
+            small: "small",
+            medium: "medium",
+            large: "large"
+          },
+          tags: ["tag1"],
+          delete: 123,
+          report: 123,
+          rating: 123
+        });
+        done();
+      });
+    });
+
   });
 });
