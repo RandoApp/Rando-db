@@ -5,17 +5,16 @@ var should = require("should");
 var async = require("async");
 
 describe("db.user.", function() {
-  before(function(done) {
-    db.connect(config.test.db.url, function() {
-      done();
-    });
+  
+  before((done) => {
+     db.connect(config.test.db.url,done);
   });
 
-  after(function(done) {
-    db.disconnect(done);
+  after((done) => {
+     db.disconnect(done);
   });
 
-  afterEach(function(done) {
+  afterEach((done) => {
     db.user.removeAll(done);
   });
 
@@ -383,65 +382,6 @@ describe("db.user.", function() {
           user.firebaseInstanceIds[0].instanceId.should.be.eql("instanceId1");
           user.firebaseInstanceIds[1].instanceId.should.be.eql("instanceId2");
           user.firebaseInstanceIds[1].active.should.be.eql(0);
-          done();
-        });
-      });
-    });
-  });
-
-  describe("updateReportFlagForInRando. ", function() {
-    beforeEach(function(done) {
-      var user = {
-        email: "user@rando4.me",
-        report: [],
-        in: [{
-          randoId: 1,
-          report: 0,
-          delete: 0
-        }, {
-          randoId: 2,
-          report: 0,
-          delete: 0
-        }, {
-          randoId: 3,
-          report: 1,
-          delete: 1
-        }],
-        out: [{
-          randoId: 4,
-          report: 0,
-          delete: 0
-        }]
-      };
-      
-      db.user.create(user, done);
-    });
-
-    it("Should update report to 1 for in rando by email and randoId", (done) => {
-      db.user.updateReportFlagForInRando("user@rando4.me", 2, 1, (err) => {
-        should.not.exist(err);
-        db.user.getByEmailLight("user@rando4.me", (err, user) => {
-          should.not.exist(err);
-          should.exist(user);
-          user.in.should.have.length(3);
-          user.in[0].should.have.properties({randoId: "1", report: 0, delete: 0});
-          user.in[1].should.have.properties({randoId: "2", report: 1, delete: 0});
-          user.in[2].should.have.properties({randoId: "3", report: 1, delete: 1});
-          done();
-        });
-      });
-    });
-
-    it("Should update report to 0 for in rando by email and randoId", (done) => {
-      db.user.updateReportFlagForInRando("user@rando4.me", 3, 0, (err) => {
-        should.not.exist(err);
-        db.user.getByEmailLight("user@rando4.me", (err, user) => {
-          should.not.exist(err);
-          should.exist(user);
-          user.in.should.have.length(3);
-          user.in[0].should.have.properties({randoId: "1", report: 0, delete: 0});
-          user.in[1].should.have.properties({randoId: "2", report: 0, delete: 0});
-          user.in[2].should.have.properties({randoId: "3", report: 0, delete: 1});
           done();
         });
       });
@@ -1065,10 +1005,10 @@ describe("getLightOutRandosForPeriod. ", function() {
       });
     });
 
-    it("Should return error when no start and end are not a numbers", (done) => {
+    it("Should return empty arrey when start and end are not a numbers", (done) => {
       db.user.getLightOutRandosForPeriod("ten bla", "fifty bla" ,(err, randos) => {
-        should.exist(err);
-        should.not.exist(randos);
+        should.not.exist(err);
+        should.exist(randos);
         randos.should.have.length(0);
         done();
       });
@@ -1457,8 +1397,8 @@ describe("updateDeleteFlagForOutRando. ", function() {
       });
     });
 
-    it("Should do nothing when no such user by email", (done) => {
-      db.user.updateDeleteFlagForOutRando("user10@rando4.me", 5, 1,(err, result) => {
+    it("Should do nothing when updating delete flag for out rando and no such user by email", (done) => {
+      db.user.updateOutRandoProperties("user10@rando4.me", 5, {delete: 1}, (err, result) => {
         should.not.exist(err);
         should.exist(result);
         result.nModified.should.be.eql(0);
@@ -1491,8 +1431,8 @@ describe("updateDeleteFlagForOutRando. ", function() {
       });
     });
 
-    it("Should do nothing when user doesn't have such rando by Id", (done) => {
-      db.user.updateDeleteFlagForOutRando("user1@rando4.me", 10, 1,(err, result) => {
+    it("Should do nothing when updating delete flag for out rando and user doesn't have such out rando by Id", (done) => {
+      db.user.updateOutRandoProperties("user1@rando4.me", 10, {delete: 1}, (err, result) => {
         should.not.exist(err);
         should.exist(result);
         result.nModified.should.be.eql(0);
@@ -1525,8 +1465,8 @@ describe("updateDeleteFlagForOutRando. ", function() {
       });
     });
 
-    it("Should update delete flag for rando by user email and by randoId", (done) => {
-      db.user.updateDeleteFlagForOutRando("user1@rando4.me", 5, 1,(err, result) => {
+    it("Should update delete flag for rando out by user email and by randoId", (done) => {
+      db.user.updateOutRandoProperties("user1@rando4.me", 5, {delete: 1}, (err, result) => {
         should.not.exist(err);
         should.exist(result);
         result.should.have.properties({nModified:1, n:1, ok : 1});
@@ -1558,7 +1498,7 @@ describe("updateDeleteFlagForOutRando. ", function() {
     });
   });
 
-describe("updateDeleteFlagForInRando. ", function() {
+describe("updateInRandoProperties. ", function() {
     
     beforeEach(function(done) {
       async.parallel([
@@ -1599,8 +1539,8 @@ describe("updateDeleteFlagForInRando. ", function() {
       });
     });
 
-    it("Should do nothing when no such user by email", (done) => {
-      db.user.updateDeleteFlagForInRando("user10@rando4.me", 5, 1,(err, result) => {
+    it("Should do nothing when updating delete flag for in rando and no such user by email", (done) => {
+      db.user.updateInRandoProperties("user10@rando4.me", 5, {delete: 1}, (err, result) => {
         should.not.exist(err);
         should.exist(result);
         result.nModified.should.be.eql(0);
@@ -1633,8 +1573,8 @@ describe("updateDeleteFlagForInRando. ", function() {
       });
     });
 
-    it("Should do nothing when user doesn't have such rando by Id", (done) => {
-      db.user.updateDeleteFlagForInRando("user1@rando4.me", 10, 1,(err, result) => {
+    it("Should do nothing when updating delete flag for in rando and user doesn't have such in rando by Id", (done) => {
+      db.user.updateInRandoProperties("user1@rando4.me", 10, {delete: 1}, (err, result) => {
         should.not.exist(err);
         should.exist(result);
         result.nModified.should.be.eql(0);
@@ -1667,8 +1607,8 @@ describe("updateDeleteFlagForInRando. ", function() {
       });
     });
 
-    it("Should update delete flag for rando by user email and by randoId", (done) => {
-      db.user.updateDeleteFlagForInRando("user1@rando4.me", 5, 1,(err, result) => {
+    it("Should update delete flag for in rando by user email and by randoId", (done) => {
+      db.user.updateInRandoProperties("user1@rando4.me", 5, {delete: 1}, (err, result) => {
         should.not.exist(err);
         should.exist(result);
         result.should.have.properties({nModified:1, n:1, ok : 1});
