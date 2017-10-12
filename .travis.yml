@@ -11,6 +11,6 @@ addons:
       - mongodb-org-server
       - mongodb-org-shell
 before_script:
-  - sleep 10
+  - sleep 15
 script:
   - npm run-script coveralls
