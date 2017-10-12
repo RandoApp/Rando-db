@@ -1,7 +1,10 @@
+sudo: false
 language: node_js
 node_js:
   - 7
   - node
+services:
+- mongodb
 addons:
   apt:
     sources:
@@ -11,6 +14,6 @@ addons:
       - mongodb-org-server
       - mongodb-org-shell
 before_script:
-  - sleep 10
+  - sleep 5
 script:
   - npm run-script coveralls
