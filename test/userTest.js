@@ -5,7 +5,7 @@ var should = require("should");
 var async = require("async");
 
 describe("db.user.", function() {
-  
+
   before((done) => {
      db.connect(config.test.db.url,done);
   });
@@ -412,7 +412,7 @@ describe("db.user.", function() {
           delete: 0
         }]
       };
-      
+
       db.user.create(user, done);
     });
 
@@ -483,6 +483,47 @@ describe("db.user.", function() {
 
   });
 
+  describe("getLightUserByEmail", () => {
+    beforeEach((done) => {
+      var createdDate = Date.now();
+      var lastUsedDate = createdDate + 10;
+
+      var firebaseInstanceIds = [{
+        instanceId: "instanceId1",
+        active: 1,
+        createdDate,
+        lastUsedDate
+      }, {
+        instanceId: "instanceId2",
+        active: 0,
+        createdDate: createdDate + 10,
+        lastUsedDate: lastUsedDate + 10
+      }];
+      db.user.create({ email: "user1@rando4.me", authToken: "authTokenValue", ip: "127.0.0.1", ban: 1, password: "123", googleId: "456", anonymousId: "anony@rando4.me", firebaseInstanceIds }, done);
+    });
+
+    it("Should return null when no such user by email", (done) => {
+      db.user.getLightUserByEmail("no_such_email", (err, user) => {
+        should.not.exist(err);
+        should.not.exist(user);
+        done();
+      });
+    });
+
+    it("Should return light user when single user is in DB with matching token", (done) => {
+      db.user.getLightUserByEmail("user1@rando4.me", (err, user) => {
+        should.not.exist(err);
+        should.exist(user);
+        user.should.have.properties({ email: "user1@rando4.me", authToken: "authTokenValue", ip: "127.0.0.1", ban: 1, password: "123", googleId: "456", anonymousId: "anony@rando4.me" });
+        user.firebaseInstanceIds[0].active.should.be.eql(1);
+        user.firebaseInstanceIds[0].instanceId.should.be.eql("instanceId1");
+        user.firebaseInstanceIds[1].instanceId.should.be.eql("instanceId2");
+        user.firebaseInstanceIds[1].active.should.be.eql(0);
+        done();
+      });
+    });
+  });
+
   describe("getLightUserMetaByOutRandoId. ", function() {
     beforeEach(function(done) {
       var user = {
@@ -512,7 +553,7 @@ describe("db.user.", function() {
           delete: 0
         }]
       };
-      
+
       async.parallel([
         (parallelDone) => {
           db.user.create(user, parallelDone);
@@ -556,7 +597,7 @@ describe("db.user.", function() {
   });
 
   describe("getBannedUsers. ", function() {
-    
+
     beforeEach(function(done) {
       async.parallel([
         (parallelDone) => {
@@ -673,7 +714,7 @@ describe("db.user.", function() {
   });
 
 describe("getLightRandoByRandoId. ", function() {
-    
+
     beforeEach(function(done) {
       async.parallel([
         (parallelDone) => {
@@ -748,15 +789,15 @@ describe("getLightRandoByRandoId. ", function() {
         user.out[0].should.have.property("randoId","5");
         user.out[0].should.have.property("email", "user2@rando4.me");
         user.out[0].should.have.property("delete", 0);
-        user.out[0].should.have.property("report", 0);    
-        user.out[0].should.have.property("originalFileName", "file_name_5.jpg"); 
+        user.out[0].should.have.property("report", 0);
+        user.out[0].should.have.property("originalFileName", "file_name_5.jpg");
         done();
       });
     });
   });
 
 describe("getLightOutRandoByOrigianlFileName. ", function() {
-    
+
     beforeEach(function(done) {
       async.parallel([
         (parallelDone) => {
@@ -819,15 +860,15 @@ describe("getLightOutRandoByOrigianlFileName. ", function() {
         user.out[0].should.have.property("randoId","5");
         user.out[0].should.have.property("email", "user2@rando4.me");
         user.out[0].should.have.property("delete", 0);
-        user.out[0].should.have.property("report", 0);    
-        user.out[0].should.have.property("originalFileName", "file_name_5.jpg"); 
+        user.out[0].should.have.property("report", 0);
+        user.out[0].should.have.property("originalFileName", "file_name_5.jpg");
         done();
       });
     });
   });
 
 describe("getAllLightOutRandosByEmail. ", function() {
-    
+
     beforeEach(function(done) {
       async.parallel([
         (parallelDone) => {
@@ -911,17 +952,17 @@ describe("getAllLightOutRandosByEmail. ", function() {
         user.out.should.have.lengthOf(2);
         user.out[0].should.not.have.property("email");
         user.out[0].should.not.have.property("delete");
-        user.out[0].should.not.have.property("report");   
+        user.out[0].should.not.have.property("report");
         user.out[0].should.not.have.property("originalFileName");
         user.out[0].should.have.property("randoId", "4");
         user.out[0].should.have.property("creation", 100);
 
         user.out[1].should.not.have.property("email");
         user.out[1].should.not.have.property("delete");
-        user.out[1].should.not.have.property("report");   
+        user.out[1].should.not.have.property("report");
         user.out[1].should.not.have.property("originalFileName");
         user.out[1].should.have.property("randoId", "10");
-        user.out[1].should.have.property("creation", 200); 
+        user.out[1].should.have.property("creation", 200);
         done();
       });
     });
@@ -1030,17 +1071,17 @@ describe("getLightOutRandosForPeriod. ", function() {
         randos.should.have.lengthOf(2);
         randos[0].should.have.property("email", "user1@rando4.me");
         randos[0].should.have.property("delete", 1);
-        randos[0].should.have.property("report", 1);   
+        randos[0].should.have.property("report", 1);
         randos[0].should.have.property("originalFileName", "file_name_3.jpg");
         randos[0].should.have.property("randoId", "3");
         randos[0].should.have.property("creation", 300);
 
         randos[1].should.have.property("email", "user2@rando4.me");
         randos[1].should.have.property("delete", 0);
-        randos[1].should.have.property("report", 0);   
+        randos[1].should.have.property("report", 0);
         randos[1].should.have.property("originalFileName", "file_name_5.jpg");
         randos[1].should.have.property("randoId", "5");
-        randos[1].should.have.property("creation", 250); 
+        randos[1].should.have.property("creation", 250);
         done();
       });
     });
@@ -1052,24 +1093,24 @@ describe("getLightOutRandosForPeriod. ", function() {
         randos.should.have.lengthOf(2);
         randos[0].should.have.property("email", "user1@rando4.me");
         randos[0].should.have.property("delete", 0);
-        randos[0].should.have.property("report", 0);   
+        randos[0].should.have.property("report", 0);
         randos[0].should.have.property("originalFileName", "file_name_4.jpg");
         randos[0].should.have.property("randoId", "4");
         randos[0].should.have.property("creation", 100);
 
         randos[1].should.have.property("email", "user1@rando4.me");
         randos[1].should.have.property("delete", 0);
-        randos[1].should.have.property("report", 0);   
+        randos[1].should.have.property("report", 0);
         randos[1].should.have.property("originalFileName", "file_name_10.jpg");
         randos[1].should.have.property("randoId", "10");
-        randos[1].should.have.property("creation", 200); 
+        randos[1].should.have.property("creation", 200);
         done();
       });
     });
   });
 
 describe("addRandoToUserOutByEmail. ", function() {
-    
+
     beforeEach(function(done) {
       async.parallel([
         (parallelDone) => {
@@ -1213,7 +1254,7 @@ describe("addRandoToUserOutByEmail. ", function() {
   });
 
 describe("addRandoToUserInByEmail. ", function() {
-    
+
     beforeEach(function(done) {
       async.parallel([
         (parallelDone) => {
@@ -1356,7 +1397,7 @@ describe("addRandoToUserInByEmail. ", function() {
   });
 
 describe("updateDeleteFlagForOutRando. ", function() {
-    
+
     beforeEach(function(done) {
       async.parallel([
         (parallelDone) => {
@@ -1499,7 +1540,7 @@ describe("updateDeleteFlagForOutRando. ", function() {
   });
 
 describe("updateInRandoProperties. ", function() {
-    
+
     beforeEach(function(done) {
       async.parallel([
         (parallelDone) => {
