@@ -1,7 +1,10 @@
+sudo: false
 language: node_js
 node_js:
   - 7
   - node
+services:
+- mongodb
 addons:
   apt:
     sources:
