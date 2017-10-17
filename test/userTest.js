@@ -483,6 +483,47 @@ describe("db.user.", function() {
 
   });
 
+  describe("getLightUserByEmail", () => {
+    beforeEach((done) => {
+      var createdDate = Date.now();
+      var lastUsedDate = createdDate + 10;
+
+      var firebaseInstanceIds = [{
+        instanceId: "instanceId1",
+        active: 1,
+        createdDate,
+        lastUsedDate
+      }, {
+        instanceId: "instanceId2",
+        active: 0,
+        createdDate: createdDate + 10,
+        lastUsedDate: lastUsedDate + 10
+      }];
+      db.user.create({ email: "user1@rando4.me", authToken: "authTokenValue", ip: "127.0.0.1", ban: 1, password: "123", googleId: "456", anonymousId: "anony@rando4.me", firebaseInstanceIds }, done);
+    });
+
+    it("Should return null when no such user by email", (done) => {
+      db.user.getLightUserByEmail("no_such_email", (err, user) => {
+        should.not.exist(err);
+        should.not.exist(user);
+        done();
+      });
+    });
+
+    it("Should return light user when single user is in DB with matching token", (done) => {
+      db.user.getLightUserByEmail("user1@rando4.me", (err, user) => {
+        should.not.exist(err);
+        should.exist(user);
+        user.should.have.properties({ email: "user1@rando4.me", authToken: "authTokenValue", ip: "127.0.0.1", ban: 1, password: "123", googleId: "456", anonymousId: "anony@rando4.me" });
+        user.firebaseInstanceIds[0].active.should.be.eql(1);
+        user.firebaseInstanceIds[0].instanceId.should.be.eql("instanceId1");
+        user.firebaseInstanceIds[1].instanceId.should.be.eql("instanceId2");
+        user.firebaseInstanceIds[1].active.should.be.eql(0);
+        done();
+      });
+    });
+  });
+
   describe("getLightUserMetaByOutRandoId. ", function() {
     beforeEach(function(done) {
       var user = {
