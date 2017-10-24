@@ -16,7 +16,7 @@ describe("randoDB.", () => {
     });
   });
   it("Should Not connect and callback with error when bad url passed", (done) => {
-    db.connect("NOT_A_MONGO_URL", err => {
+    db.connect("mongodb://NOT_A_MONGO_URL", err => {
       should.exist(err);
       done();
     });
