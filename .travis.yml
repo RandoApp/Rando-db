@@ -2,7 +2,7 @@ sudo: false
 language: node_js
 node_js:
   - 7
-  - node
+  - 8.1.2
 services:
 - mongodb
 addons:
@@ -15,5 +15,6 @@ addons:
       - mongodb-org-shell
 before_script:
   - sleep 5
+  - rm /usr/local/lib/npm-check-updates
 script:
   - npm run-script coveralls
