@@ -15,6 +15,5 @@ addons:
       - mongodb-org-shell
 before_script:
   - sleep 5
-  - rm /usr/local/lib/npm-check-updates
 script:
   - npm run-script coveralls
