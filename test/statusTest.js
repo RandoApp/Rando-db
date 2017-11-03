@@ -8,7 +8,7 @@ var shell = require("shelljs");
 describe("db.status", () => {
 
   before(done => {
-    db.connect(config.test.db.url,done);
+    db.connect(config.test.db.url, done);
   });
 
   after(done => {
@@ -23,7 +23,7 @@ describe("db.status", () => {
   });
 
   it("Should fail", done => {
-    sinon.stub(shell, "exec", function (command, options, callback) {
+    sinon.stub(shell, "exec").callsFake((command, options, callback) => {
       callback(1);
     });
 
