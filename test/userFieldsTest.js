@@ -549,7 +549,7 @@ describe("db.user.", () => {
       });
     });
 
-    it("Should get all filds in getAllLightInAndOutRandosByEmailForExchange", done => {
+    it("Should get all filds in getLightUserWithInAndOutByEmail", done => {
       db.user.getLightUserWithInAndOutByEmail("user@rando4.me", (err, user) => {
         should.not.exist(err);
         user.should.have.properties({
