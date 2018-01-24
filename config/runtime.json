@@ -1,1 +1,7 @@
-{}
+{
+  "db": {
+    "keepAlive": 0,
+    "reconnectTries": 1,
+    "socketTimeoutMS": 0
+  }
+}
