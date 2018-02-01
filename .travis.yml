@@ -8,6 +8,7 @@ services:
 before_script:
 - sleep 5
 script:
+- mongod --version
 - npm run-script coveralls
 deploy:
   provider: npm
