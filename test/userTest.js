@@ -39,7 +39,7 @@ describe("db.user.", () => {
           users.should.have.length(1);
           users[0].email.should.be.eql("unique-email@gm.com");
           db.user.create({ email: "unique-email@gm.com", password: "456" }, (err) => {
-            console.log("!!!!!!!!!!!!!!!!!!!: " + err);
+            should.exist(err);
             db.user.getAll((err, users) => {
               should.not.exist(err);
               users.should.have.length(1);
