@@ -4,15 +4,7 @@ node_js:
   - 8.1.2
   - node
 services:
-- mongodb
-addons:
-  apt:
-    sources:
-      - mongodb-upstart
-      - mongodb-3.2-precise
-    packages:
-      - mongodb-org-server
-      - mongodb-org-shell
+  - mongodb
 before_script:
   - sleep 5
 script:
