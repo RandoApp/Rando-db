@@ -4,7 +4,7 @@ var db = require("../lib/randoDB");
 var should = require("should");
 var async = require("async");
 
-describe("db.user.", function() {
+describe("db.user.", () => {
 
   before((done) => {
      db.connect(config.test.db.url,done);
@@ -18,10 +18,10 @@ describe("db.user.", function() {
     db.user.removeAll(done);
   });
 
-  describe("create", function() {
-    it("Should create user and lower case email", function(done) {
-      db.user.create({ "email": "EMAIL@gm.com", "authToken": "authTokenValue" }, function() {
-        db.user.getAll(function(err, users) {
+  describe("create", () => {
+    it("Should create user and lower case email", (done) => {
+      db.user.create({ "email": "EMAIL@gm.com", "authToken": "authTokenValue" }, () => {
+        db.user.getAll((err, users) => {
           should.not.exist(err);
           users.should.have.length(1);
           var user = users[0];
@@ -32,18 +32,19 @@ describe("db.user.", function() {
       });
     });
 
-    it("Should fail create when user email is already taken", function(done) {
-      db.user.create({ "email": "email@gm.com" }, function() {
-        db.user.getAll(function(err, users) {
+    it("Should fail create when user email is already taken", (done) => {
+      db.user.create({ email: "email@gm.com", password: "123" }, () => {
+        db.user.getAll((err, users) => {
           should.not.exist(err);
           users.should.have.length(1);
           users[0].email.should.be.eql("email@gm.com");
-          db.user.create({ "email": "email@gm.com" }, function(err) {
-            should.exist(err);
-            db.user.getAll(function(err, users) {
+          db.user.create({ email: "email@gm.com", password: "456" }, (err) => {
+            console.log("!!!!!!!!!!!!!!!!!!!: " + err);
+            db.user.getAll((err, users) => {
               should.not.exist(err);
               users.should.have.length(1);
               users[0].email.should.be.eql("email@gm.com");
+              users[0].password.should.be.eql("123");
               done();
             });
           });
@@ -52,20 +53,20 @@ describe("db.user.", function() {
     });
   });
 
-  describe("update", function() {
-    beforeEach(function(done) {
+  describe("update", () => {
+    beforeEach((done) => {
       db.user.create({ "email": "email@gm.com" }, done);
     });
 
-    it("Should update user", function(done) {
-      db.user.getByEmail("email@gm.com", function(err, user) {
+    it("Should update user", (done) => {
+      db.user.getByEmail("email@gm.com", (err, user) => {
         should.exist(user);
         should.not.exist(err);
         user.email.should.be.eql("email@gm.com");
         user.authToken = "authTokenValue";
-        db.user.update(user, function(err) {
+        db.user.update(user, (err) => {
           should.not.exist(err);
-          db.user.getByEmail("email@gm.com", function(err, user) {
+          db.user.getByEmail("email@gm.com", (err, user) => {
             should.not.exist(err);
             user.email.should.be.eql("email@gm.com");
             user.authToken.should.be.eql("authTokenValue");
@@ -75,16 +76,16 @@ describe("db.user.", function() {
       });
     });
 
-    it("Should Not throw err when update user with not allowed field", function(done) {
-      db.user.getByEmail("email@gm.com", function(err, user) {
+    it("Should Not throw err when update user with not allowed field", (done) => {
+      db.user.getByEmail("email@gm.com", (err, user) => {
         should.exist(user);
         should.not.exist(err);
         user.email.should.be.eql("email@gm.com");
         user.authToken = "authTokenValue";
         user.notAllowed = "Not Allowed";
-        db.user.update(user, function(err) {
+        db.user.update(user, (err) => {
           should.not.exist(err);
-          db.user.getByEmail("email@gm.com", function(err, user) {
+          db.user.getByEmail("email@gm.com", (err, user) => {
             should.not.exist(err);
             user.should.not.have.property("notAllowed");
             user.email.should.be.eql("email@gm.com");
@@ -96,15 +97,15 @@ describe("db.user.", function() {
     });
   });
 
-  describe("updateUserMetaByEmail", function() {
-    beforeEach(function(done) {
+  describe("updateUserMetaByEmail", () => {
+    beforeEach((done) => {
       db.user.create({ "email": "email@gm.com" }, done);
     });
 
-    it("Should update user authToken", function(done) {
-      db.user.updateUserMetaByEmail("email@gm.com", { authToken: "authTokenValue" }, function(err) {
+    it("Should update user authToken", (done) => {
+      db.user.updateUserMetaByEmail("email@gm.com", { authToken: "authTokenValue" }, (err) => {
         should.not.exist(err);
-        db.user.getByEmail("email@gm.com", function(err, user) {
+        db.user.getByEmail("email@gm.com", (err, user) => {
           should.not.exist(err);
           user.email.should.be.eql("email@gm.com");
           user.authToken.should.be.eql("authTokenValue");
@@ -113,10 +114,10 @@ describe("db.user.", function() {
       });
     });
 
-    it("Should update user facebookId", function(done) {
-      db.user.updateUserMetaByEmail("email@gm.com", { facebookId: "facebookIdValue" }, function(err) {
+    it("Should update user facebookId", (done) => {
+      db.user.updateUserMetaByEmail("email@gm.com", { facebookId: "facebookIdValue" }, (err) => {
         should.not.exist(err);
-        db.user.getByEmail("email@gm.com", function(err, user) {
+        db.user.getByEmail("email@gm.com", (err, user) => {
           should.not.exist(err);
           user.email.should.be.eql("email@gm.com");
           user.facebookId.should.be.eql("facebookIdValue");
@@ -125,10 +126,10 @@ describe("db.user.", function() {
       });
     });
 
-    it("Should update user googleId", function(done) {
-      db.user.updateUserMetaByEmail("email@gm.com", { googleId: "googleIdValue" }, function(err) {
+    it("Should update user googleId", (done) => {
+      db.user.updateUserMetaByEmail("email@gm.com", { googleId: "googleIdValue" }, (err) => {
         should.not.exist(err);
-        db.user.getByEmail("email@gm.com", function(err, user) {
+        db.user.getByEmail("email@gm.com", (err, user) => {
           should.not.exist(err);
           user.email.should.be.eql("email@gm.com");
           user.googleId.should.be.eql("googleIdValue");
@@ -137,10 +138,10 @@ describe("db.user.", function() {
       });
     });
 
-    it("Should update user anonymousId", function(done) {
-      db.user.updateUserMetaByEmail("email@gm.com", { anonymousId: "anonymousIdValue" }, function(err) {
+    it("Should update user anonymousId", (done) => {
+      db.user.updateUserMetaByEmail("email@gm.com", { anonymousId: "anonymousIdValue" }, (err) => {
         should.not.exist(err);
-        db.user.getByEmail("email@gm.com", function(err, user) {
+        db.user.getByEmail("email@gm.com", (err, user) => {
           should.not.exist(err);
           user.email.should.be.eql("email@gm.com");
           user.anonymousId.should.be.eql("anonymousIdValue");
@@ -149,10 +150,10 @@ describe("db.user.", function() {
       });
     });
 
-    it("Should update user password", function(done) {
-      db.user.updateUserMetaByEmail("email@gm.com", { password: "passwordValue" }, function(err) {
+    it("Should update user password", (done) => {
+      db.user.updateUserMetaByEmail("email@gm.com", { password: "passwordValue" }, (err) => {
         should.not.exist(err);
-        db.user.getByEmail("email@gm.com", function(err, user) {
+        db.user.getByEmail("email@gm.com", (err, user) => {
           should.not.exist(err);
           user.email.should.be.eql("email@gm.com");
           user.password.should.be.eql("passwordValue");
@@ -161,10 +162,10 @@ describe("db.user.", function() {
       });
     });
 
-    it("Should update user ip", function(done) {
-      db.user.updateUserMetaByEmail("email@gm.com", { ip: "ipValue" }, function(err) {
+    it("Should update user ip", (done) => {
+      db.user.updateUserMetaByEmail("email@gm.com", { ip: "ipValue" }, (err) => {
         should.not.exist(err);
-        db.user.getByEmail("email@gm.com", function(err, user) {
+        db.user.getByEmail("email@gm.com", (err, user) => {
           should.not.exist(err);
           user.email.should.be.eql("email@gm.com");
           user.ip.should.be.eql("ipValue");
@@ -173,11 +174,11 @@ describe("db.user.", function() {
       });
     });
 
-    it("Should update user ban", function(done) {
+    it("Should update user ban", (done) => {
       var banDate = new Date().getTime();
-      db.user.updateUserMetaByEmail("email@gm.com", { ban: banDate }, function(err) {
+      db.user.updateUserMetaByEmail("email@gm.com", { ban: banDate }, (err) => {
         should.not.exist(err);
-        db.user.getByEmail("email@gm.com", function(err, user) {
+        db.user.getByEmail("email@gm.com", (err, user) => {
           should.not.exist(err);
           user.email.should.be.eql("email@gm.com");
           user.ban.should.be.eql(banDate);
@@ -186,11 +187,11 @@ describe("db.user.", function() {
       });
     });
 
-    it("Should update empty firebaseInstanceIds", function(done) {
+    it("Should update empty firebaseInstanceIds", (done) => {
       var newFirebaseInstanceIds = [];
-      db.user.updateUserMetaByEmail("email@gm.com", { firebaseInstanceIds: newFirebaseInstanceIds }, function(err) {
+      db.user.updateUserMetaByEmail("email@gm.com", { firebaseInstanceIds: newFirebaseInstanceIds }, (err) => {
         should.not.exist(err);
-        db.user.getByEmail("email@gm.com", function(err, user) {
+        db.user.getByEmail("email@gm.com", (err, user) => {
           should.not.exist(err);
           user.email.should.be.eql("email@gm.com");
           user.firebaseInstanceIds.should.exist;
@@ -200,7 +201,7 @@ describe("db.user.", function() {
       });
     });
 
-    it("Should update with array of firebaseInstanceIds", function(done) {
+    it("Should update with array of firebaseInstanceIds", (done) => {
       var createdDate = new Date().getTime();
       var lastUsedDate = new Date().getTime();
 
@@ -215,9 +216,9 @@ describe("db.user.", function() {
         createdDate: createdDate + 10,
         lastUsedDate: lastUsedDate + 10
       }];
-      db.user.updateUserMetaByEmail("email@gm.com", { firebaseInstanceIds: newFirebaseInstanceIds }, function(err) {
+      db.user.updateUserMetaByEmail("email@gm.com", { firebaseInstanceIds: newFirebaseInstanceIds }, (err) => {
         should.not.exist(err);
-        db.user.getByEmail("email@gm.com", function(err, user) {
+        db.user.getByEmail("email@gm.com", (err, user) => {
           should.not.exist(err);
           user.email.should.be.eql("email@gm.com");
           user.firebaseInstanceIds.should.exist;
@@ -228,10 +229,10 @@ describe("db.user.", function() {
       });
     });
 
-    it("Should not update not existing", function(done) {
-      db.user.updateUserMetaByEmail("email@gm.com", { notExist: "Not Exist" }, function(err) {
+    it("Should not update not existing", (done) => {
+      db.user.updateUserMetaByEmail("email@gm.com", { notExist: "Not Exist" }, (err) => {
         should.not.exist(err);
-        db.user.getByEmail("email@gm.com", function(err, user) {
+        db.user.getByEmail("email@gm.com", (err, user) => {
           should.not.exist(err);
           user.email.should.be.eql("email@gm.com");
           should.not.exist(user.notExist);
@@ -241,8 +242,8 @@ describe("db.user.", function() {
     });
   });
 
-  describe("updateActiveForAllFirabaseIdsByEmail", function() {
-    beforeEach(function(done) {
+  describe("updateActiveForAllFirabaseIdsByEmail", () => {
+    beforeEach((done) => {
       var createdDate = Date.now();
       var lastUsedDate = createdDate + 10;
 
@@ -265,10 +266,10 @@ describe("db.user.", function() {
       db.user.create({ "email": "email@gm.com", firebaseInstanceIds }, done);
     });
 
-    it("Should update Active to false For All FirabaseIds By Email", function(done) {
-      db.user.updateActiveForAllFirabaseIdsByEmail("email@gm.com", 0, function(err) {
+    it("Should update Active to false For All FirabaseIds By Email", (done) => {
+      db.user.updateActiveForAllFirabaseIdsByEmail("email@gm.com", 0, (err) => {
         should.not.exist(err);
-        db.user.getByEmail("email@gm.com", function(err, user) {
+        db.user.getByEmail("email@gm.com", (err, user) => {
           should.not.exist(err);
           should.exist(user);
           user.firebaseInstanceIds.should.exist;
@@ -281,10 +282,10 @@ describe("db.user.", function() {
       });
     });
 
-    it("Should update Active to true For All FirabaseIds By Email", function(done) {
-      db.user.updateActiveForAllFirabaseIdsByEmail("email@gm.com", 1, function(err) {
+    it("Should update Active to true For All FirabaseIds By Email", (done) => {
+      db.user.updateActiveForAllFirabaseIdsByEmail("email@gm.com", 1, (err) => {
         should.not.exist(err);
-        db.user.getByEmail("email@gm.com", function(err, user) {
+        db.user.getByEmail("email@gm.com", (err, user) => {
           should.not.exist(err);
           should.exist(user);
           user.firebaseInstanceIds.should.exist;
@@ -297,10 +298,10 @@ describe("db.user.", function() {
       });
     });
 
-    it("Should not fail when no such user By Email", function(done) {
-      db.user.updateActiveForAllFirabaseIdsByEmail("notExist@gm.com", 1, function(err) {
+    it("Should not fail when no such user By Email", (done) => {
+      db.user.updateActiveForAllFirabaseIdsByEmail("notExist@gm.com", 1, (err) => {
         should.not.exist(err);
-        db.user.getByEmail("notExist@gm.com", function(err, user) {
+        db.user.getByEmail("notExist@gm.com", (err, user) => {
           should.not.exist(err);
           should.not.exist(user);
           done();
@@ -308,11 +309,11 @@ describe("db.user.", function() {
       });
     });
 
-    it("Should not fail and call callback when user doesn't have any FirabaseIds", function(done) {
-      db.user.create({ email: "email2@gm.com" }, function(err) {
-        db.user.updateActiveForAllFirabaseIdsByEmail("email2@gm.com", 1, function(err) {
+    it("Should not fail and call callback when user doesn't have any FirabaseIds", (done) => {
+      db.user.create({ email: "email2@gm.com" }, (err) => {
+        db.user.updateActiveForAllFirabaseIdsByEmail("email2@gm.com", 1, (err) => {
           should.not.exist(err);
-          db.user.getByEmail("email2@gm.com", function(err, user) {
+          db.user.getByEmail("email2@gm.com", (err, user) => {
             should.not.exist(err);
             should.exist(user);
             should.exist(user.firebaseInstanceIds);
@@ -324,8 +325,8 @@ describe("db.user.", function() {
     });
   });
 
-  describe("getLightUserByToken", function() {
-    beforeEach(function(done) {
+  describe("getLightUserByToken", () => {
+    beforeEach((done) => {
       var createdDate = Date.now();
       var lastUsedDate = createdDate + 10;
 
@@ -343,16 +344,16 @@ describe("db.user.", function() {
       db.user.create({ email: "email@gm.com", authToken: "authTokenValue", ip: "127.0.0.1", ban: 1, firebaseInstanceIds }, done);
     });
 
-    it("Should return null when no such user by token", function(done) {
-      db.user.getLightUserByToken("no_such_token", function(err, user) {
+    it("Should return null when no such user by token", (done) => {
+      db.user.getLightUserByToken("no_such_token", (err, user) => {
         should.not.exist(err);
         should.not.exist(user);
         done();
       });
     });
 
-    it("Should return light user when single user is in DB with matching token", function(done) {
-      db.user.getLightUserByToken("authTokenValue", function(err, user) {
+    it("Should return light user when single user is in DB with matching token", (done) => {
+      db.user.getLightUserByToken("authTokenValue", (err, user) => {
         should.not.exist(err);
         should.exist(user);
         user.email.should.be.eql("email@gm.com");
@@ -367,10 +368,10 @@ describe("db.user.", function() {
         done();
       });
     });
-    it("Should return light user when multiple users are in DB and one with matching token", function(done) {
-      db.user.create({ email: "email2@gm.com", authToken: "authTokenValue2", ip: "127.0.0.0", ban: 0 }, function(err) {
+    it("Should return light user when multiple users are in DB and one with matching token", (done) => {
+      db.user.create({ email: "email2@gm.com", authToken: "authTokenValue2", ip: "127.0.0.0", ban: 0 }, (err) => {
         should.not.exist(err);
-        db.user.getLightUserByToken("authTokenValue", function(err, user) {
+        db.user.getLightUserByToken("authTokenValue", (err, user) => {
           should.not.exist(err);
           should.exist(user);
           user.email.should.be.eql("email@gm.com");
@@ -388,8 +389,8 @@ describe("db.user.", function() {
     });
   });
 
-  describe("addReportForUser. ", function() {
-    beforeEach(function(done) {
+  describe("addReportForUser. ", () => {
+    beforeEach((done) => {
       var user = {
         email: "user@rando4.me",
         report: [],
@@ -524,8 +525,8 @@ describe("db.user.", function() {
     });
   });
 
-  describe("getLightUserMetaByOutRandoId. ", function() {
-    beforeEach(function(done) {
+  describe("getLightUserMetaByOutRandoId. ", () => {
+    beforeEach((done) => {
       var user = {
         email: "user@rando4.me",
         report: [{
@@ -596,9 +597,9 @@ describe("db.user.", function() {
 
   });
 
-  describe("getBannedUsers. ", function() {
+  describe("getBannedUsers. ", () => {
 
-    beforeEach(function(done) {
+    beforeEach((done) => {
       async.parallel([
         (parallelDone) => {
           db.user.create({
@@ -713,9 +714,9 @@ describe("db.user.", function() {
 
   });
 
-describe("getLightRandoByRandoId. ", function() {
+describe("getLightRandoByRandoId. ", () => {
 
-    beforeEach(function(done) {
+    beforeEach((done) => {
       async.parallel([
         (parallelDone) => {
           db.user.create({
@@ -796,9 +797,9 @@ describe("getLightRandoByRandoId. ", function() {
     });
   });
 
-describe("getLightOutRandoByOrigianlFileName. ", function() {
+describe("getLightOutRandoByOrigianlFileName. ", () => {
 
-    beforeEach(function(done) {
+    beforeEach((done) => {
       async.parallel([
         (parallelDone) => {
           db.user.create({
@@ -867,9 +868,9 @@ describe("getLightOutRandoByOrigianlFileName. ", function() {
     });
   });
 
-describe("getAllLightOutRandosByEmail. ", function() {
+describe("getAllLightOutRandosByEmail. ", () => {
 
-    beforeEach(function(done) {
+    beforeEach((done) => {
       async.parallel([
         (parallelDone) => {
           db.user.create({
@@ -968,9 +969,9 @@ describe("getAllLightOutRandosByEmail. ", function() {
     });
   });
 
-describe("addRandoToUserOutByEmail. ", function() {
+describe("addRandoToUserOutByEmail. ", () => {
 
-    beforeEach(function(done) {
+    beforeEach((done) => {
       async.parallel([
         (parallelDone) => {
           db.user.create({
@@ -1112,9 +1113,9 @@ describe("addRandoToUserOutByEmail. ", function() {
 
   });
 
-describe("addRandoToUserInByEmail. ", function() {
+describe("addRandoToUserInByEmail. ", () => {
 
-    beforeEach(function(done) {
+    beforeEach((done) => {
       async.parallel([
         (parallelDone) => {
           db.user.create({
@@ -1255,9 +1256,9 @@ describe("addRandoToUserInByEmail. ", function() {
     });
   });
 
-describe("updateDeleteFlagForOutRando. ", function() {
+describe("updateDeleteFlagForOutRando. ", () => {
 
-    beforeEach(function(done) {
+    beforeEach((done) => {
       async.parallel([
         (parallelDone) => {
           db.user.create({
@@ -1398,9 +1399,9 @@ describe("updateDeleteFlagForOutRando. ", function() {
     });
   });
 
-describe("updateInRandoProperties. ", function() {
+describe("updateInRandoProperties. ", () => {
 
-    beforeEach(function(done) {
+    beforeEach((done) => {
       async.parallel([
         (parallelDone) => {
           db.user.create({
