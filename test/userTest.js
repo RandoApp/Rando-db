@@ -33,17 +33,17 @@ describe("db.user.", () => {
     });
 
     it("Should fail create when user email is already taken", (done) => {
-      db.user.create({ email: "email@gm.com", password: "123" }, () => {
+      db.user.create({ email: "unique-email@gm.com", password: "123" }, () => {
         db.user.getAll((err, users) => {
           should.not.exist(err);
           users.should.have.length(1);
-          users[0].email.should.be.eql("email@gm.com");
-          db.user.create({ email: "email@gm.com", password: "456" }, (err) => {
+          users[0].email.should.be.eql("unique-email@gm.com");
+          db.user.create({ email: "unique-email@gm.com", password: "456" }, (err) => {
             console.log("!!!!!!!!!!!!!!!!!!!: " + err);
             db.user.getAll((err, users) => {
               should.not.exist(err);
               users.should.have.length(1);
-              users[0].email.should.be.eql("email@gm.com");
+              users[0].email.should.be.eql("unique-email@gm.com");
               users[0].password.should.be.eql("123");
               done();
             });
