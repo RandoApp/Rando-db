@@ -1,11 +1,19 @@
 sudo: false
 language: node_js
 node_js:
-  - 8.1.2
-  - node
+- 8.1.2
+- node
 services:
-  - mongodb
+- mongodb
 before_script:
-  - sleep 5
+- sleep 5
 script:
-  - npm run-script coveralls
+- npm run-script coveralls
+deploy:
+  provider: npm
+  email: randoapp.me@gmail.com
+  api_key:
+    secure: O++YFSZKjfUpcKspeXj2J5TsbfxarFuCw80ngUK3hllGyCUNfNn0nPzfSjPvRjsCEBehYP0fmEvPNC/iel2yMRre2khQMW8UwsTqV7AoCKIeTOLplqP8EXVNbuMmhEt5BvadEQXn8KvsxTp3PfACNG2Tl6DXP1mjcd/2AzThjdI=
+  on:
+    tags: true
+    repo: RandoApp/Rando-db
