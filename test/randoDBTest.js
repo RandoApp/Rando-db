@@ -15,7 +15,8 @@ describe("randoDB.", () => {
       });
     });
   });
-  it("Should Not connect and callback with error when bad url passed", (done) => {
+  it("Should Not connect and callback with error when bad url passed", function (done) {
+    this.timeout(55000);
     db.connect("mongodb://NOT_A_MONGO_URL", err => {
       should.exist(err);
       done();

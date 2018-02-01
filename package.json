@@ -1,34 +1,46 @@
 {
-  "name": "randoDB",
-  "version": "0.3.0",
+  "name": "@rando4.me/db",
+  "version": "0.1.1",
   "description": "Module that provide API for rando database operations",
   "engine": {
     "node": ">=0.8.8"
   },
-  "author": "Rando 4Me team",
+  "author": "Rando 4Me Team",
   "main": "./lib/randoDB",
-  "directories": "lib",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/RandoApp/Rando-db.git"
+    "url": "git+https://github.com/RandoApp/Rando-db.git"
   },
   "dependencies": {
-    "mongoose": "4.12.4",
+    "mongoose": "5.0.3",
     "winston": "2.4.0",
-    "async": "2.5.0",
+    "async": "2.6.0",
     "js-yaml": "3.10.0",
-    "config": "1.27.0",
-    "shelljs": "0.7.8"
+    "config": "1.29.2",
+    "shelljs": "0.8.1"
   },
   "devDependencies": {
-    "mocha": "4.0.1",
-    "should": "13.1.2",
-    "sinon": "4.0.1",
+    "mocha": "5.0.0",
+    "should": "13.2.1",
+    "sinon": "4.2.1",
     "istanbul": "0.4.5",
     "coveralls": "3.0.0"
   },
   "scripts": {
     "test": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- --recursive",
     "coveralls": "node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --report lcovonly -- --recursive && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/RandoApp/Rando-db/issues"
+  },
+  "homepage": "https://github.com/RandoApp/Rando-db#readme",
+  "keywords": [
+    "rando4me",
+    "db"
+  ],
+  "license": "MIT"
 }

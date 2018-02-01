@@ -1,3 +1,7 @@
+db:
+  keepAlive: 300000
+  reconnectTries: 30
+  socketTimeoutMS: 300000
 test:
     db:
         url: mongodb://127.0.0.1:27017/rando-integration-tests
