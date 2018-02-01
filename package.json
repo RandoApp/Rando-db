@@ -1,16 +1,19 @@
 {
-  "name": "randoDB",
-  "version": "0.3.0",
+  "name": "@rando4.me/db",
+  "version": "0.1.0",
   "description": "Module that provide API for rando database operations",
   "engine": {
     "node": ">=0.8.8"
   },
-  "author": "Rando 4Me team",
+  "author": "Rando 4Me Team",
   "main": "./lib/randoDB",
-  "directories": "lib",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/RandoApp/Rando-db.git"
+    "url": "git+https://github.com/RandoApp/Rando-db.git"
   },
   "dependencies": {
     "mongoose": "5.0.1",
@@ -30,5 +33,14 @@
   "scripts": {
     "test": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- --recursive",
     "coveralls": "node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --report lcovonly -- --recursive && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/RandoApp/Rando-db/issues"
+  },
+  "homepage": "https://github.com/RandoApp/Rando-db#readme",
+  "keywords": [
+    "rando4me",
+    "db"
+  ],
+  "license": "MIT"
 }
