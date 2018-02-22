@@ -1,8 +1,6 @@
-const sinon = require("sinon");
 const config = require("config");
 const db = require("../lib/randoDB");
 const should = require("should");
-const async = require("async");
 
 describe("randoDB.", () => {
   it("Should connect successfully and callback without error and disconnect", (done) => {
