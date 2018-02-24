@@ -1,4 +1,3 @@
-var sinon = require("sinon");
 var config = require("config");
 var db = require("../lib/randoDB");
 var should = require("should");
