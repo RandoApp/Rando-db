@@ -1,7 +1,8 @@
-var config = require("config");
-var db = require("../lib/randoDB");
-var should = require("should");
-var async = require("async");
+const config = require("config");
+const db = require("../lib/randoDB");
+const should = require("should");
+const async = require("async");
+const winston = require("winston");
 
 describe("db.user.", () => {
 
@@ -1540,4 +1541,132 @@ describe("updateInRandoProperties. ", () => {
     });
   });
 
+describe("getUserStatistics. ", () => {
+   beforeEach((done) => {
+      async.parallel([
+        (parallelDone) => {
+          db.user.create({
+            email: "userstat1@rando4.me",
+             out: [{
+              randoId: 1,
+              rating: 3
+            }, 
+            {
+              randoId: 2,
+              rating: 2
+            }, 
+            {
+              randoId: 3,
+              rating: 1,
+            }, 
+            {
+              randoId: 4,
+              rating: 3
+            }, 
+            {
+              randoId: 5,
+              rating: 3
+            }, 
+            {
+              randoId: 6,
+              rating: 3,
+            }]
+          }, parallelDone);
+        },
+        (parallelDone) => {
+          db.user.create({
+            email: "userstat2@rando4.me",
+             out: [{
+              randoId: 1,
+              rating: 3
+            }, 
+            {
+              randoId: 2,
+              rating: 2
+            }, 
+            {
+              randoId: 3,
+              rating: 3,
+            }, 
+            {
+              randoId: 4,
+              rating: 2
+            }, 
+            {
+              randoId: 5,
+              rating: 3
+            }, 
+            {
+              randoId: 6,
+              rating: 3,
+            }]
+          }, parallelDone);
+        },
+        (parallelDone) => {
+          db.user.create({
+            email: "userstat3@rando4.me",
+             out: [{
+              randoId: 1,
+              rating: 1
+            }, 
+            {
+              randoId: 2,
+              rating: 1
+            }]
+          }, parallelDone);
+        },
+        (parallelDone) => {
+          db.user.create({
+            email: "userstat4@rando4.me",
+            in: [{
+              randoId: 1,
+              rating: 1
+            }, 
+            {
+              randoId: 2,
+              rating: 1
+            }]
+          }, parallelDone);
+        }
+      ], (err) => {
+        done(err);
+      });
+    });
+
+    it("Should return statistics when both likes and dislikes are set", (done) => {
+      db.user.getUserStatistics("userstat1@rando4.me", (err, statistics) => {
+        should.not.exist(err);
+        should.exist(statistics);
+        statistics.should.have.properties({"likes" : 5, "dislikes" : 1});
+        done();
+      });
+    });
+
+    it("Should return statistics when only likes are set", (done) => {
+      db.user.getUserStatistics("userstat2@rando4.me", (err, statistics) => {
+        should.not.exist(err);
+        should.exist(statistics);
+        statistics.should.have.properties({"likes" : 6, "dislikes" : 0});
+        done();
+      });
+    });
+
+    it("Should return statistics when only dislikes are set", (done) => {
+      db.user.getUserStatistics("userstat3@rando4.me", (err, statistics) => {
+        should.not.exist(err);
+        should.exist(statistics);
+        statistics.should.have.properties({"likes" : 0, "dislikes" : 2});
+        done();
+      });
+    });
+
+    it("Should return statistics when no dislikes or likes are set", (done) => {
+      db.user.getUserStatistics("userstat4@rando4.me", (err, statistics) => {
+        should.not.exist(err);
+        should.exist(statistics);
+        statistics.should.have.properties({"likes" : 0, "dislikes" : 0});
+        done();
+      });
+    });
+  });
 });

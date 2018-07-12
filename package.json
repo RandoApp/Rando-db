@@ -1,6 +1,6 @@
 {
   "name": "@rando4.me/db",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Module that provide API for rando database operations",
   "engine": {
     "node": ">=0.8.8"
@@ -16,7 +16,7 @@
     "url": "git+https://github.com/RandoApp/Rando-db.git"
   },
   "dependencies": {
-    "mongoose": "5.0.6",
+    "mongoose": "5.0.12",
     "winston": "2.4.0",
     "async": "2.6.0",
     "js-yaml": "3.10.0",
