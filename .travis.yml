@@ -14,7 +14,7 @@ deploy:
   provider: npm
   email: randoapp.me@gmail.com
   api_key:
-    secure: O++YFSZKjfUpcKspeXj2J5TsbfxarFuCw80ngUK3hllGyCUNfNn0nPzfSjPvRjsCEBehYP0fmEvPNC/iel2yMRre2khQMW8UwsTqV7AoCKIeTOLplqP8EXVNbuMmhEt5BvadEQXn8KvsxTp3PfACNG2Tl6DXP1mjcd/2AzThjdI=
+    secure: W42fP4K6mll5zTVXOi6wXLHhqUakEIuPZ+cuy1PncB3xtIJlcQKrk9XssGNHc71rPTEXX2rTNl4XlZXCCKzeIS3V0syll0ZLLXiA0geXKVi5IjZka6BSFbl3daqtH89EgUQnu4CzF6aqTVD+X6SCFnz4xDfAvr15j3dJTu3alR4=
   on:
     tags: true
     repo: RandoApp/Rando-db
