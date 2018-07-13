@@ -1,6 +1,6 @@
 {
   "name": "@rando4.me/db",
-  "version": "0.1.5",
+  "version": "0.1.4",
   "description": "Module that provide API for rando database operations",
   "engine": {
     "node": ">=0.8.8"
